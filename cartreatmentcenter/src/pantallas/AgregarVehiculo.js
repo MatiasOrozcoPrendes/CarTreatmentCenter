@@ -4,43 +4,52 @@ import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 
-const CrearUsuarios = () => {
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [ci, setCi] = useState('');
+const AgregarVehiculo = () => {
+  const [matricula, setMatricula] = useState('');
+  const [marca, setMarca] = useState('');
+  const [color, setColor] = useState('');
+  const [serial, setSerial] = useState('');
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.viewContainer}>
           <View style={styles.generalView}>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Nombre</Text>
+              <Text style={styles.texto}>Matricula</Text>
               <CtcInputText 
                 style={styles.input}
-                placeholder="Nombre"
-                onChangeText={(text) => setNombre(text.trim())}    
+                placeholder="Matricula"
+                onChangeText={(text) => setMatricula(text.trim())}    
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Apellido</Text>
+              <Text style={styles.texto}>Marca</Text>
               <CtcInputText 
                 style={styles.input}
-                placeholder="Apellido"
-                onChangeText={(text) => setApellido(text.trim())}    
+                placeholder="Marca"
+                onChangeText={(text) => setMarca(text.trim())}    
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>CI</Text>
+              <Text style={styles.texto}>Color</Text>
               <CtcInputText 
                 style={styles.input}
-                placeholder="CI"
-                onChangeText={(text) => setCi(text.trim())}    
+                placeholder="Color"
+                onChangeText={(text) => setColor(text.trim())}    
+              />
+            </View>
+            <View style={styles.unaLinea}>
+              <Text style={styles.texto}>Serial</Text>
+              <CtcInputText 
+                style={styles.input}
+                placeholder="Serial"
+                onChangeText={(text) => setSerial(text.trim())}    
               />
             </View>
             <CtcBoton 
                style={styles.button}
                title="Crear"
                btnColor="#FF0000"
-               customPress={() => Alert.alert(`Nombre:${nombre} Apellido:${apellido} CI:${ci}`)}
+               customPress={() => Alert.alert(`Matricula:${matricula} ${marca} ${color} ${serial}`)}
             />
           </View>
         </View>
@@ -48,7 +57,7 @@ const CrearUsuarios = () => {
   )
 }
 
-export default CrearUsuarios
+export default AgregarVehiculo
 
 const styles = StyleSheet.create({
   container: {
