@@ -13,6 +13,25 @@ const Principal = ({ navigation }) => {
                  btnColor="#FF0000"
                  customPress={() => navigation.navigate("Usuarios")}
               />
+              <CtcBoton 
+                 style={styles.button}
+                 title="Crear Tratamiento"
+                 btnColor="#FF0000"
+                 customPress={() => navigation.navigate("CrearTratamiento")}
+              />
+              <CtcBoton 
+                 style={styles.button}
+                 title="Tratamientos Activos"
+                 btnColor="#FF0000"
+                 customPress={() => navigation.navigate("Tratamientos")}
+              />
+              <CtcBoton 
+                 style={styles.button}
+                 title="Tratamientos Finalizados"
+                 btnColor="#FF0000"
+                 customPress={() => navigation.navigate("BuscarTratamiento")}
+              />
+             
             </View>
       </View>
     </SafeAreaView>

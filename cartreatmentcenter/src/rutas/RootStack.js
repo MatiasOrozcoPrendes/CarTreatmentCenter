@@ -9,8 +9,13 @@ import CrearUsuarios from "../pantallas/CrearUsuarios";
 import GestionarUsuarios from "../pantallas/GestionarUsuarios";
 import AgregarVehiculo from "../pantallas/AgregarVehiculo";
 import ModificarVehiculo from "../pantallas/ModificarVehiculo";
-
-
+import CrearTratamiento from "../pantallas/CrearTratamiento";
+import Tratamientos from "../pantallas/Tratamientos";
+import ModificarTratamiento from "../pantallas/ModificarTratamiento";
+import BuscarTratamiento from "../pantallas/BuscarTratamiento";
+import Tratamiento from "../pantallas/Tratamiento";
+import Insumos from "../pantallas/Insumos";
+import Repuestos from "../pantallas/Repuestos";
 
 
 const RootStack = () => {
@@ -104,6 +109,105 @@ const RootStack = () => {
                     fontSize: 25,
                 }
             }}/>
+            <Stack.Screen
+                name="CrearTratamiento"
+                component={CrearTratamiento}
+                options={{
+                title: "Tratamiento",
+                headerStyle: {
+                    backgroundColor: "#23BAC4"
+                },
+                headerTintColor: "#FFFF00",
+                headerTitleStyle: {
+                    color: 'black',
+                    fontSize: 25,
+                }
+            }}/>
+            <Stack.Screen
+                name="Tratamientos"
+                component={Tratamientos}
+                options={{
+                title: "Tratamientos",
+                headerStyle: {
+                    backgroundColor: "#23BAC4"
+                },
+                headerTintColor: "#FFFF00",
+                headerTitleStyle: {
+                    color: 'black',
+                    fontSize: 25,
+                }
+            }}/>
+            <Stack.Screen
+                name="ModificarTratamiento"
+                component={ModificarTratamiento}
+                options={{
+                title: "Tratamiento",
+                headerStyle: {
+                    backgroundColor: "#23BAC4"
+                },
+                headerTintColor: "#FFFF00",
+                headerTitleStyle: {
+                    color: 'black',
+                    fontSize: 25,
+                }
+            }}/>
+            <Stack.Screen
+                name="BuscarTratamiento"
+                component={BuscarTratamiento}
+                options={{
+                title: "Buscar Tratamiento",
+                headerStyle: {
+                    backgroundColor: "#23BAC4"
+                },
+                headerTintColor: "#FFFF00",
+                headerTitleStyle: {
+                    color: 'black',
+                    fontSize: 25,
+                }
+            }}/>
+            <Stack.Screen
+                name="Tratamiento"
+                component={Tratamiento}
+                options={{
+                title: "Tratamiento",
+                headerStyle: {
+                    backgroundColor: "#23BAC4"
+                },
+                headerTintColor: "#FFFF00",
+                headerTitleStyle: {
+                    color: 'black',
+                    fontSize: 25,
+                }
+            }}/>
+            <Stack.Screen
+                name="Insumos"
+                component={Insumos}
+                options={{
+                title: "Insumos",
+                headerStyle: {
+                    backgroundColor: "#23BAC4"
+                },
+                headerTintColor: "#FFFF00",
+                headerTitleStyle: {
+                    color: 'black',
+                    fontSize: 25,
+                }
+            }}/>
+            <Stack.Screen
+                name="Repuestos"
+                component={Repuestos}
+                options={{
+                title: "Repuestos",
+                headerStyle: {
+                    backgroundColor: "#23BAC4"
+                },
+                headerTintColor: "#FFFF00",
+                headerTitleStyle: {
+                    color: 'black',
+                    fontSize: 25,
+                }
+            }}/>
+            
         </Stack.Navigator>
     </NavigationContainer>
 

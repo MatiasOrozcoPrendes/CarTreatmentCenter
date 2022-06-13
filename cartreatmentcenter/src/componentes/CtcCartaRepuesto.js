@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-const CtcCartaTratamiento = (props) => {
+const CtcCartaRepuesto = (props) => {
   return (
     <TouchableOpacity style={[styles.button, props.style, {backgroundColor: props.btnColor}]} onPress={props.customPress}>
         <View style={styles.view}>
@@ -11,7 +11,7 @@ const CtcCartaTratamiento = (props) => {
   )
 }
 
-export default CtcCartaTratamiento
+export default CtcCartaRepuesto
 
 const styles = StyleSheet.create({
     unaLinea: {

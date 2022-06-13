@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
       button: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 15,
+        marginTop: 5,
         marginLeft: 5,
         marginRight: 5,
-        marginBottom: 15,
+        marginBottom: 5,
         shadowColor: "#000",
         shadowOffset: {
           width: 2,

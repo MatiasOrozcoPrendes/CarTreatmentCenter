@@ -1,79 +1,71 @@
 import React from 'react'
 import { useState} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList } from 'react-native'
-import CtcInputText from '../componentes/CtcInputText'
-import CtcBoton from '../componentes/CtcBoton'
-import CtcCartaInsumo from '../componentes/CtcCartaInsumo'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, Modal } from 'react-native'
+import CtcCartaTratamiento from '../componentes/CtcCartaTratamiento';
+import CtcInputText from '../componentes/CtcInputText';
+import CtcBoton from '../componentes/CtcBoton';
 
-const Insumos = () => {
-  const [nombre, setNombre] = useState('');
-  const [precio, setPrecio] = useState('');
-  const [insumos, setInsumos] = useState([ "Insumo 1", "Insumo 2", "Insumo 3", "Insumo 4", "Insumo 5"]);
-  const listarInsumos = (item) => {
+const BuscarTratamiento = ({ navigation }) => {
+  const [tratamientos, setTratamientos] = useState(["Tratamiento 1", "Tratamiento 2", "Tratamiento 3", "Tratamiento 4", "Tratamiento 5"]);
+  const [tratamiento, setTratamiento] = useState('');
+  const [usuaruio, setUsuario] = useState('');
+  const [modalVisible, setModalVisible] = useState(true);
+  const listarTratamiento = (item) => {
     return (
       <View >
-        <CtcCartaInsumo 
+        <CtcCartaTratamiento 
             style={styles.carta}
             texto={item}
             btnColor="#A9BCF5"
-            customPress={() => setNombre(item)}
+            customPress={() => navigation.navigate("Tratamiento")}
           />
       </View>
     );
   };
+
   return (
     <SafeAreaView style={styles.container}>
     <View style={styles.viewContainer}>
       <View style={styles.generalView}>
-        <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Nombre</Text>
+      <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+          <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+          <View style={styles.unaLinea}>
+          <Text style={styles.texto}>Usuario</Text>
           <CtcInputText 
             style={styles.input}
-            placeholder="Nombre"
-            value={nombre}
-            onChangeText={(text) => setNombre(text.trim())}    
+            placeholder="Usuario"
+            onChangeText={(text) => setUsuario(text.trim())}    
           />
         </View>
-        <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Precio</Text>
-          <CtcInputText 
-            style={styles.input}
-            placeholder="Precio"
-            onChangeText={(text) => setPrecio(text.trim())}    
-          />
-        </View>
-        <View style={styles.unaLinea}>
         <CtcBoton 
             style={styles.button}
-            title="Agregar"
+            title="Cargar"
             btnColor="#FF0000"
-            customPress={() => Alert.alert(`Agrego:${nombre}`)}
+            customPress={() => setModalVisible(!modalVisible)}
           />
-          <CtcBoton 
-            style={styles.button}
-            title="Modificar"
-            btnColor="#FF0000"
-            customPress={() => Alert.alert(`Modifico:${nombre}`)}
-          />
-          <CtcBoton 
-            style={styles.button}
-            title="Eliminar"
-            btnColor="#FF0000"
-            customPress={() => Alert.alert(`Elimino:${nombre}`)}
-          />
+          </View>
         </View>
+        </Modal>
+        <Text style={styles.texto}>Tratamientos Terminados</Text>
         <FlatList
           contentContainerStyle={{ paddingHorizontal: 20 }}
-          data={insumos}
-          renderItem={({ item }) => listarInsumos(item)}
+          data={tratamientos}
+          renderItem={({ item }) => listarTratamiento(item)}
         />
       </View>
     </View>
 </SafeAreaView>
   )
 }
-
-export default Insumos
+export default BuscarTratamiento
 
 const styles = StyleSheet.create({
   container: {

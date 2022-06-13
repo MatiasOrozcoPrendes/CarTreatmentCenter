@@ -81,8 +81,4 @@ const styles = StyleSheet.create({
     width: 200, 
     height: 40,
   },
-  button: {
-    width: 200, 
-    height: 80,
-  },
 })

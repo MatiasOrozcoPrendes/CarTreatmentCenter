@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, Modal } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaVehiculo from '../componentes/CtcCartaVehiculo';
@@ -11,6 +11,7 @@ const GestionarUsuarios = ({ navigation }) => {
   const [apellido, setApellido] = useState('');
   const [ci, setCi] = useState('');
   const [vehiculo, setVehiculo] = useState('');
+  const [modalVisible, setModalVisible] = useState(true);
   const listarVehiculos = (item) => {
     return (
       <View >
@@ -28,11 +29,39 @@ const GestionarUsuarios = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
     <View style={styles.viewContainer}>
       <View style={styles.generalView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+          <View style={styles.unaLinea}>
+          <Text style={styles.texto}>Nombre</Text>
+          <CtcInputText 
+            style={styles.input}
+            placeholder="Nombre"
+            onChangeText={(text) => setNombre(text.trim())}    
+          />
+        </View>
+        <CtcBoton 
+            style={styles.button}
+            title="Cargar"
+            btnColor="#FF0000"
+            customPress={() => setModalVisible(!modalVisible)}
+          />
+          </View>
+        </View>
+        </Modal>
         <View style={styles.unaLinea}>
           <Text style={styles.texto}>Nombre</Text>
           <CtcInputText 
             style={styles.input}
             placeholder="Nombre"
+            value={nombre}
             onChangeText={(text) => setNombre(text.trim())}    
           />
         </View>
@@ -139,5 +168,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 5,
     width: 300, 
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
 })
