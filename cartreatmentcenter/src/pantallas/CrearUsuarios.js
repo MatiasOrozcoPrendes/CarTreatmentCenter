@@ -3,6 +3,7 @@ import { useState} from "react";
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
+import AñadirUsuario from '../database/FuncionesABM'
 
 const CrearUsuarios = () => {
   const [nombre, setNombre] = useState('');
@@ -40,7 +41,7 @@ const CrearUsuarios = () => {
                style={styles.button}
                title="Crear"
                btnColor="#FF0000"
-               customPress={() => Alert.alert(`Nombre:${nombre} Apellido:${apellido} CI:${ci}`)}
+               customPress={() => {/*AñadirUsuario(nombre,apellido,ci)*/}}
             />
           </View>
         </View>
