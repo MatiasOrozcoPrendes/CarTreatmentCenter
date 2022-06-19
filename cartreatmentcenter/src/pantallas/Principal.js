@@ -1,8 +1,14 @@
 import React from 'react'
+import { useEffect } from 'react'
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
 import CtcBoton from '../componentes/CtcBoton'
+import { CrearTablaUsuario } from '../database/FuncionesABM'
 
 const Principal = ({ navigation }) => {
+  useEffect(() => {
+    CrearTablaUsuario()
+  }, []);
+      
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewContainer}>

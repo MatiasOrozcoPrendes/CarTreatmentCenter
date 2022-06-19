@@ -2,23 +2,70 @@ import { Alert } from 'react-native'
 import DatabaseConnection from "./database-connection";
 const db = DatabaseConnection.getConnection();
 
-
-    function CrearTablaUsuario(){
-        db.transaction((tx) =>{
-            tx.executeSql(`CREATE TABLE IF NOT EXIST Usuarios(
-                UsuarioId int identity(1,1) primary key,
-                UsuarioCI int unique,
-                UsuarioNombre varchar(20),
-                UsuarioApellido varchar(20));`)
-        })
+   export function CrearTablaUsuario(){
+    console.log("Creando tabla usuario");
+    db.transaction( (txn) => {
+        txn.executeSql(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='usuarios'",
+          [],
+           (tx, res) =>{
+            console.log('item:', res.rows.length);
+            console.log("Antes del si"+res.rowsAffected);
+            if (res.rows.length == 0) {
+                console.log("Despues del si");
+              txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
+              console.log("Despues de eliminar");
+              txn.executeSql(
+                'CREATE TABLE IF NOT EXISTS usuarios(usuarioId INTEGER PRIMARY KEY AUTOINCREMENT, usuarioCI INTEGER, usuarioNombre VARCHAR(20), usuarioApellido VARCHAR(20))',
+                []
+              );
+              console.log("Despues de crear");
+            }
+          }
+        );
+      });
     }
 
-    export function AñadirUsuario(UsuarioNombre, UsuarioApellido, UsuarioCI){
-        CrearTablaUsuario();
+    export function AñadirUsuario (UsuarioCI, UsuarioNombre, UsuarioApellido){
+        console.log( "1")
+        debugger;
+        console.log("2")
         db.transaction((tx) => {
-            tx.executeSql(`INSERT INTO Usuarios VALUES(${UsuarioCI},${UsuarioNombre},${UsuarioApellido});`);
-            Alert.alert(`Nombre:${nombre} Apellido:${apellido} CI:${ci}`);
+          console.log("3")
+          tx.executeSql(
+            `INSERT INTO usuarios (usuarioCI, usuarioNombre, usuarioApellido) VALUES (?, ?, ?)`,
+            [UsuarioCI, UsuarioNombre, UsuarioApellido],
+            //console.log( "4"),
+            (tx, results) => {
+              console.log("5")
+              // validar resultado
+              if (results.rowsAffected > 0) {
+                console.log("6"),
+                Alert.alert("Exito", "Usuario Creardo Cprrectamente",
+                  [{text: "Ok",},],
+                  { cancelable: false }
+                );
+              } else {
+                Alert.alert("Error al agregar el Pokemon");
+              }
+            }
+          );
         });
+    }
+    export function CargarUsuarios(){
+        console.log("1")
+        db.transaction((tx) => {
+            tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
+              if (results.rows.length > 0) {
+                console.log("2")
+                var temp = [];
+                for (let i = 0; i < results.rows.length; ++i)
+                temp.push(results.rows.item(i));
+                temp.forEach((unUsuario)=>{
+                  console.log(unUsuario.usuarioCI, unUsuario.usuarioNombre, unUsuario.usuarioApellido);
+                })
+              }});
+          });
     }
 
     export function ModificarUsuario(UsuarioNombre, UsuarioApellido, UsuarioCI){

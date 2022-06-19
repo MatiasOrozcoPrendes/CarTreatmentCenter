@@ -1,14 +1,24 @@
-import React from 'react'
-import { useState} from "react";
+import React, { Component } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
-import AñadirUsuario from '../database/FuncionesABM'
+import { AñadirUsuario, CargarUsuarios } from '../database/FuncionesABM'
 
-const CrearUsuarios = () => {
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [ci, setCi] = useState('');
+class CrearUsuarios extends Component{
+
+  state = {
+    nombre: '',
+    apellido: '',
+    ci: ''
+  }
+  handleInputChange = (inputName, inputValue) => {
+    this.setState(state =>({
+      ...state,
+      [inputName]: inputValue
+    }))
+  }
+  render(){	
+  
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.viewContainer}>
@@ -18,7 +28,7 @@ const CrearUsuarios = () => {
               <CtcInputText 
                 style={styles.input}
                 placeholder="Nombre"
-                onChangeText={(text) => setNombre(text.trim())}    
+                onChangeText={(value) => this.handleInputChange('nombre', value)}    
               />
             </View>
             <View style={styles.unaLinea}>
@@ -26,7 +36,7 @@ const CrearUsuarios = () => {
               <CtcInputText 
                 style={styles.input}
                 placeholder="Apellido"
-                onChangeText={(text) => setApellido(text.trim())}    
+                onChangeText={(value) => this.handleInputChange('apellido', value)}    
               />
             </View>
             <View style={styles.unaLinea}>
@@ -34,19 +44,26 @@ const CrearUsuarios = () => {
               <CtcInputText 
                 style={styles.input}
                 placeholder="CI"
-                onChangeText={(text) => setCi(text.trim())}    
+                onChangeText={(value) => this.handleInputChange('ci', value)}    
               />
             </View>
             <CtcBoton 
                style={styles.button}
                title="Crear"
                btnColor="#FF0000"
-               customPress={() => {/*AñadirUsuario(nombre,apellido,ci)*/}}
+               customPress={() => { AñadirUsuario(this.state.ci, this.state.nombre, this.state.apellido)}}
+            />
+            <CtcBoton 
+               style={styles.button}
+               title="Listar"
+               btnColor="#FF0000"
+               customPress={() => { CargarUsuarios()}}
             />
           </View>
         </View>
     </SafeAreaView>
   )
+}
 }
 
 export default CrearUsuarios
