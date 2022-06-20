@@ -1,25 +1,20 @@
 import { Alert } from 'react-native'
+import { useState } from "react";
 import DatabaseConnection from "./database-connection";
 const db = DatabaseConnection.getConnection();
 
    export function CrearTablaUsuario(){
-    console.log("Creando tabla usuario");
     db.transaction( (txn) => {
         txn.executeSql(
           "SELECT name FROM sqlite_master WHERE type='table' AND name='usuarios'",
           [],
            (tx, res) =>{
-            console.log('item:', res.rows.length);
-            console.log("Antes del si"+res.rowsAffected);
             if (res.rows.length == 0) {
-                console.log("Despues del si");
               txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
-              console.log("Despues de eliminar");
               txn.executeSql(
                 'CREATE TABLE IF NOT EXISTS usuarios(usuarioId INTEGER PRIMARY KEY AUTOINCREMENT, usuarioCI INTEGER, usuarioNombre VARCHAR(20), usuarioApellido VARCHAR(20))',
                 []
               );
-              console.log("Despues de crear");
             }
           }
         );
@@ -27,21 +22,14 @@ const db = DatabaseConnection.getConnection();
     }
 
     export function AñadirUsuario (UsuarioCI, UsuarioNombre, UsuarioApellido){
-        console.log( "1")
         debugger;
-        console.log("2")
         db.transaction((tx) => {
-          console.log("3")
           tx.executeSql(
             `INSERT INTO usuarios (usuarioCI, usuarioNombre, usuarioApellido) VALUES (?, ?, ?)`,
             [UsuarioCI, UsuarioNombre, UsuarioApellido],
-            //console.log( "4"),
             (tx, results) => {
-              console.log("5")
-              // validar resultado
               if (results.rowsAffected > 0) {
-                console.log("6"),
-                Alert.alert("Exito", "Usuario Creardo Cprrectamente",
+                Alert.alert("Exito", "Usuario Creardo Correctamente",
                   [{text: "Ok",},],
                   { cancelable: false }
                 );
@@ -52,35 +40,35 @@ const db = DatabaseConnection.getConnection();
           );
         });
     }
-    export function CargarUsuarios(){
-        console.log("1")
-        db.transaction((tx) => {
-            tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
-              if (results.rows.length > 0) {
-                console.log("2")
-                var temp = [];
-                for (let i = 0; i < results.rows.length; ++i)
-                temp.push(results.rows.item(i));
-                temp.forEach((unUsuario)=>{
-                  console.log(unUsuario.usuarioCI, unUsuario.usuarioNombre, unUsuario.usuarioApellido);
-                })
-              }});
-          });
-    }
-
+ 
     export function ModificarUsuario(UsuarioNombre, UsuarioApellido, UsuarioCI){
+        debugger;
         db.transaction((tx) => {
-            tx.executeSql(`UPDATE INTO Usuarios SET UsuarioCI = ${UsuarioCI} UsuarioNombre = ${UsuarioNombre} UsuarioApellido = ${UsuarioApellido}
-            WHERE UsuarioCI = ${UsuarioCI};`);
-            return true;
-        });
+            tx.executeSql(
+              "UPDATE usuarios SET usuarioNombre = ?, usuarioApellido = ? WHERE usuarioCI = ?",
+              [UsuarioNombre, UsuarioApellido, UsuarioCI],
+              (tx, results) => {
+                Alert.alert("Usuario actualizado");
+              }
+            );
+          });
     }
 
     export function EliminarUsuario(UsuarioCI){
         db.transaction((tx) => {
-            tx.executeSql(`DELETE FROM Usuarios WHERE UsuarioCI = ${UsuarioCI};`);
-            return true
-        });
+            tx.executeSql(
+              `DELETE FROM usuarios WHERE usuarioCI = ?`,
+              [UsuarioCI],
+              (tx, results) => {
+                // validar resultado
+                if (results.rowsAffected > 0) {
+                  Alert.alert("Usuario eliminado");
+                } else {
+                  Alert.alert("El usuario no existe");
+                }
+              }
+            );
+          });
     }
 
     function CrearTablaVehiculo(){

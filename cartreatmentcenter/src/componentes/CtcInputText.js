@@ -9,6 +9,7 @@ const CtcInputText = (props) => {
             maxLength={props.maxLength}
             minLength={props.minLength}
             onChangeText={props.onChangeText}
+            editable={props.editable}
             placeholder={props.placeholder}
             placeholderTextColor="#F4FA58"
             keyboardType={props.keyboardType}

@@ -6,6 +6,9 @@ import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaVehiculo from '../componentes/CtcCartaVehiculo';
 import SelectDropdown from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { ModificarUsuario, EliminarUsuario } from '../database/FuncionesABM'
+import DatabaseConnection from '../database/database-connection';
+const db = DatabaseConnection.getConnection();
 
 const GestionarUsuarios = ({ navigation }) => {
   const [vehiculos, setVehiculos] = useState([ { matricula: "LAA-420", marca: "Volvo", color: "Rojo", serial: "25487", ciUsuario: "43620097"},
@@ -13,10 +16,7 @@ const GestionarUsuarios = ({ navigation }) => {
                                                 { matricula: "LAA-422", marca: "Toyota", color: "Negro", serial: "98643", ciUsuario: "43620097"},
                                                 { matricula: "LAA-423", marca: "Ford", color: "Amarillo", serial: "56871", ciUsuario: "87654321"},
                                                 { matricula: "LAA-424", marca: "Chevrolet", color: "Verde", serial: "45963", ciUsuario: "45678912"},]);
-  const [usuarios, setUsuarios] = useState([  { nombre: "Matias", apellido: "Orozco", ci: "43620097"},
-                                              { nombre: "Melissa", apellido: "Larrosa", ci: "12345678" }, 
-                                              { nombre: "Juan", apellido: "Perez", ci: "87654321"},
-                                              { nombre: "Pedro", apellido: "Perez", ci: "45678912"},]);
+  const [usuarios, setUsuarios] = useState([]);
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [ci, setCi] = useState('');
@@ -39,22 +39,51 @@ const GestionarUsuarios = ({ navigation }) => {
     );
   };
   useEffect(() => {
-    cargoSelector();
+    db.transaction((tx) => {
+      tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
+        if (results.rows.length > 0) {
+          let temp = [];
+          for (let i = 0; i < results.rows.length; ++i)
+          temp.push(results.rows.item(i).usuarioCI + " - " + results.rows.item(i).usuarioNombre + " " + results.rows.item(i).usuarioApellido);
+          setListaUsuarios(temp);
+        }
+      });
+    });
+    let usuarios = [];
+        db.transaction((tx) => {
+            tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
+              if (results.rows.length > 0) {
+                let temp = [];
+                let usuario
+                for (let i = 0; i < results.rows.length; ++i)
+                temp.push(results.rows.item(i));
+                temp.map((unUsuario, index) => {
+                    usuario = {
+                        usuarioCI: unUsuario.usuarioCI,
+                        usuarioNombre: unUsuario.usuarioNombre,
+                        usuarioApellido: unUsuario.usuarioApellido
+                    }
+                    usuarios.push(usuario);
+                    setUsuarios(usuarios);                        
+                })
+              }
+            });
+        });
   }, []);
-  function cargoSelector(){
-    let lista = [];
-    usuarios.map(item => {
-      lista.push (`${item.ci} - ${item.nombre} ${item.apellido}`);
-    })
-    setListaUsuarios(lista);
+
+  function EliminoUsuario() {
+    EliminarUsuario(ci), 
+    navigation.navigate('Usuarios')
   }
   function CargoUsuario(pUsuario){
     let auxCi = pUsuario.substring(0,8);
     usuarios.map(item => {
-      if (item.ci == auxCi){
-        setNombre(item.nombre);
-        setApellido(item.apellido);
-        setCi(item.ci);}
+      if (item.usuarioCI == auxCi){
+        setNombre(item.usuarioNombre);
+        setApellido(item.usuarioApellido);
+        setCi(item.usuarioCI.toString());
+        setModalVisible(!modalVisible);
+      }
     });
     let auxVehiculos = [];
     vehiculos.map(item => {
@@ -63,7 +92,6 @@ const GestionarUsuarios = ({ navigation }) => {
       }
     });
     setListaVehiculos(auxVehiculos);
-    setModalVisible(!modalVisible)
   }
 
   return (
@@ -75,6 +103,7 @@ const GestionarUsuarios = ({ navigation }) => {
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
+            navigation.navigate('Usuarios');
             setModalVisible(!modalVisible);
           }}
         >
@@ -85,7 +114,7 @@ const GestionarUsuarios = ({ navigation }) => {
           <SelectDropdown
               style={styles.selectDropdown}
               data={listaUsuarios}
-              // defaultValueByIndex={1}
+              //defaultValueByIndex={1}
               // defaultValue={'Egypt'}
               onSelect={(selectedItem) => {
                 setUsuario(selectedItem);
@@ -147,6 +176,7 @@ const GestionarUsuarios = ({ navigation }) => {
           <Text style={styles.texto}>CI</Text>
           <CtcInputText 
             style={styles.input}
+            editable={false}
             placeholder="CI"
             value={ci}
             onChangeText={(text) => setCi(text)}    
@@ -157,13 +187,13 @@ const GestionarUsuarios = ({ navigation }) => {
             style={styles.button}
             title="Modificar"
             btnColor="#FF0000"
-            customPress={() => Alert.alert(`Nombre:${nombre} Apellido:${apellido} CI:${ci}`)}
+            customPress={() => ModificarUsuario(nombre, apellido, ci)}
           />
           <CtcBoton 
             style={styles.button}
             title="Eliminar"
             btnColor="#FF0000"
-            customPress={() => Alert.alert(`Elimino Nombre:${nombre} Apellido:${apellido} CI:${ci}`)}
+            customPress={() => EliminoUsuario()}
           />
         </View>
         <FlatList

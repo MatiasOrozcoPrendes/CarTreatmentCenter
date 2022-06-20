@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
-import { AñadirUsuario, CargarUsuarios } from '../database/FuncionesABM'
+import { AñadirUsuario } from '../database/FuncionesABM'
 
 class CrearUsuarios extends Component{
 
@@ -28,6 +28,7 @@ class CrearUsuarios extends Component{
               <CtcInputText 
                 style={styles.input}
                 placeholder="Nombre"
+                value={this.state.nombre}
                 onChangeText={(value) => this.handleInputChange('nombre', value)}    
               />
             </View>
@@ -36,6 +37,7 @@ class CrearUsuarios extends Component{
               <CtcInputText 
                 style={styles.input}
                 placeholder="Apellido"
+                value={this.state.apellido}
                 onChangeText={(value) => this.handleInputChange('apellido', value)}    
               />
             </View>
@@ -44,6 +46,7 @@ class CrearUsuarios extends Component{
               <CtcInputText 
                 style={styles.input}
                 placeholder="CI"
+                value={this.state.ci}
                 onChangeText={(value) => this.handleInputChange('ci', value)}    
               />
             </View>
@@ -51,13 +54,10 @@ class CrearUsuarios extends Component{
                style={styles.button}
                title="Crear"
                btnColor="#FF0000"
-               customPress={() => { AñadirUsuario(this.state.ci, this.state.nombre, this.state.apellido)}}
-            />
-            <CtcBoton 
-               style={styles.button}
-               title="Listar"
-               btnColor="#FF0000"
-               customPress={() => { CargarUsuarios()}}
+               customPress={() => { AñadirUsuario(this.state.ci, this.state.nombre, this.state.apellido),
+                 this.handleInputChange('nombre', ''),
+                 this.handleInputChange('apellido', ''),
+                 this.handleInputChange('ci', '')}}
             />
           </View>
         </View>
