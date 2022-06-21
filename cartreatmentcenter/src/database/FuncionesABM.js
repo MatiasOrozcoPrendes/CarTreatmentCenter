@@ -182,21 +182,16 @@ const db = DatabaseConnection.getConnection();
 
     export function ModTratamiento(TratamientoID, Matricula, Tratamiento, FechaInicioTratamiento, FechaFinalTratamiento, ManoDeObra, Costo){
       debugger;
+      console.log(TratamientoID, Matricula, Tratamiento, FechaInicioTratamiento, FechaFinalTratamiento, ManoDeObra, Costo)
         db.transaction((tx) => {
             tx.executeSql(
               "UPDATE tratamientos SET matricula = ?, tratamiento = ?, fechaInicioTratamiento = ?, fechaFinalTratamiento = ?, manoDeObra = ?, costo = ? WHERE tratamientoId = ?",
               [Matricula, Tratamiento, FechaInicioTratamiento, FechaFinalTratamiento, ManoDeObra, Costo, TratamientoID],
               (tx, results) => {
-                Alert.alert("Vehiculo actualizado");
+                Alert.alert("Tratamiento actualizado");
               }
             );
           });  
-      
-      db.transaction((tx) => {
-            tx.executeSql(`UPDATE INTO Tratamientos SET VehiculoId = ${VehiculoId} Tratamiento = ${Tratamiento} FechaInicioTratamiento = ${FechaInicioTratamiento}
-            WHERE TratamientoId = ${TratamientoId};`);
-            return true;
-        });
     }
 
     export function EliminarTratamiento(TratamientoId){

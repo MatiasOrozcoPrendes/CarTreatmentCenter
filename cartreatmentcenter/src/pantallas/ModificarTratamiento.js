@@ -66,9 +66,20 @@ const ModificarTratamiento = ({ navigation }) => {
     setFechaFinalTratamiento(pTratamiento.fechaFinalTratamiento);
     setVehiculo(pTratamiento.matricula);
     setManoDeObra(pTratamiento.manoDeObra);
-    setTratamientoID(pTratamiento.id);
+    setTratamientoID(pTratamiento.tratamientoID);
     setModalVisible(!modalVisible);
   }
+
+  function ActualizoTratamiento(){
+    if ( tratamiento === '' || fechaInicioTratamiento === '' || fechaFinalTratamiento === '' || manoDeObra === '' || vehiculo === ''){
+      Alert.alert('Error', 'Debe completar todos los campos');
+    }
+    else{
+      ModTratamiento(tratamientoID, vehiculo, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, 0);
+      navigation.navigate('Inicio');
+    }
+  }
+
   useEffect(() => {
     let auxTratamientos = [];
         db.transaction((tx) => {
@@ -85,9 +96,8 @@ const ModificarTratamiento = ({ navigation }) => {
                         fechaFinalTratamiento: unTratamiento.fechaFinalTratamiento,
                         fechaInicioTratamiento: unTratamiento.fechaInicioTratamiento,
                         manoDeObra: unTratamiento.manoDeObra,
-                        tratamientoID: unTratamiento.tratamientoID
+                        tratamientoID: unTratamiento.tratamientoId
                     }
-                    console.log(unTratamiento)
                     auxTratamientos.push(auxTratamiento);
                     setTratamientos(auxTratamientos);                        
                 })
@@ -288,7 +298,7 @@ const ModificarTratamiento = ({ navigation }) => {
                   style={styles.button}
                   title="Modificar"
                   btnColor="#FF0000"
-                  customPress={() => Alert.alert(`Vehiculo:${vehiculo} Tratamiento:${tratamiento}`)}
+                  customPress={() => ActualizoTratamiento()}
                 />
                 <CtcBoton 
                   style={styles.button}
