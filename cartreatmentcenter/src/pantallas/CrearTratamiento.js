@@ -1,19 +1,82 @@
 import React from 'react'
-import { useState} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, Modal } from 'react-native'
+import { useState, useEffect} from "react";
+import { StyleSheet, Text, View, SafeAreaView, Alert, Modal, FlatList } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
+import SelectDropdown from 'react-native-select-dropdown';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { AñadirTratamiento } from '../database/FuncionesABM'
+import DatabaseConnection from '../database/database-connection';
+const db = DatabaseConnection.getConnection();
 
-const CrearTratamiento = () => {
-  const [usuaruio, setUsuario] = useState('');
+const CrearTratamiento = ({navigation}) => {
+  const [listaUsuarios, setListaUsuarios] = useState([]);
+  const [vehiculos, setVehiculos] = useState([]);
+  const [listaVehiculos, setListaVehiculos] = useState([]);
+  const [usuario, setUsuario] = useState('');
   const [vehiculo, setVehiculo] = useState('');
   const [tratamiento, setTratamiento] = useState('');
   const [modalVisible, setModalVisible] = useState(true);
-  const [fechaIni, setFechaIni] = useState('');
-  const [fechaFin, setFechaFin] = useState('');
-  const [manoDeObra, setManoDeObra] = useState('');
-  const [insumos, setInsumos] = useState([ "Insumo 1", "Insumo 2", "Insumo 3", "Insumo 4", "Insumo 5"]);
-  const [repuestos, setRepuestos] = useState([ "Repuesto 1", "Repuesto 2", "Repuesto 3", "Repuesto 4", "Repuesto 5"]);
+  
+  useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
+        if (results.rows.length > 0) {
+          let temp = [];
+          for (let i = 0; i < results.rows.length; ++i)
+          temp.push(results.rows.item(i).usuarioCI + " - " + results.rows.item(i).usuarioNombre + " " + results.rows.item(i).usuarioApellido);
+          setListaUsuarios(temp);
+        }
+      });
+    });
+    let vehiculos = [];
+        db.transaction((tx) => {
+            tx.executeSql(`SELECT * FROM vehiculos`, [], (tx, results) => {
+              if (results.rows.length > 0) {
+                let temp = [];
+                let vehiculo
+                for (let i = 0; i < results.rows.length; ++i)
+                temp.push(results.rows.item(i));
+                temp.map((unVehiculo) => {
+                    vehiculo = {
+                        matricula: unVehiculo.matricula,
+                        marca: unVehiculo.marca,
+                        color: unVehiculo.color,
+                        serial: unVehiculo.serial,
+                        usuarioCI: unVehiculo.usuarioCI
+                    }
+                    vehiculos.push(vehiculo);
+                    setVehiculos(vehiculos);                        
+                })
+              }
+            });
+        });    
+  }, [])
+  function CargoUsuario(pUsuario){
+    let auxCi = pUsuario.substring(0,8);
+    setUsuario(pUsuario);
+    let auxVehiculos = [];
+    vehiculos.map(item => {
+      if (item.usuarioCI == auxCi){
+        auxVehiculos.push(item.matricula);
+      }
+    });
+    setListaVehiculos(auxVehiculos);
+    setModalVisible(false);
+  }
+  function CargoTratamiento(){
+    if (tratamiento === ''){
+      Alert.alert('Error', 'Debe agregar un tratamiento');
+    }
+    else{
+      let fecha = new Date();
+      let fechaString = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
+      console.log(vehiculo, tratamiento, fechaString);
+      AñadirTratamiento(vehiculo, tratamiento, fechaString, "-", 0, 0);
+      navigation.navigate('Inicio');
+    }
+    
+  }
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.viewContainer}>
@@ -23,34 +86,65 @@ const CrearTratamiento = () => {
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
+              navigation.navigate('Inicio');
               setModalVisible(!modalVisible);
             }}
           >
           <View style={styles.centeredView}>
           <View style={styles.modalView}>
           <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Usuario</Text>
-          <CtcInputText 
-            style={styles.input}
-            placeholder="Usuario"
-            onChangeText={(text) => setUsuario(text.trim())}    
-          />
+            <Text style={styles.texto}>Usuario</Text>
+            <SelectDropdown
+              style={styles.selectDropdown}
+              data={listaUsuarios}
+              //defaultValueByIndex={1}
+              // defaultValue={'Egypt'}
+              onSelect={(selectedItem) => {
+                setUsuario(selectedItem);
+              }}
+              defaultButtonText={'Usuario'}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+              buttonStyle={styles.dropdown1BtnStyle}
+              buttonTextStyle={styles.dropdown1BtnTxtStyle}
+              renderDropdownIcon={isOpened => {
+                return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+              }}
+              dropdownIconPosition={'right'}
+              dropdownStyle={styles.dropdown1DropdownStyle}
+              rowStyle={styles.dropdown1RowStyle}
+              rowTextStyle={styles.dropdown1RowTxtStyle}
+              selectedRowStyle={styles.dropdown1SelectedRowStyle}
+              search
+              searchInputStyle={styles.dropdown1searchInputStyleStyle}
+              searchPlaceHolder={'Buscar aqui...'}
+              searchPlaceHolderColor={'darkgrey'}
+              renderSearchInputLeftIcon={() => {
+                return <FontAwesome name={'search'} color={'#444'} size={18} />;
+              }}
+            />
         </View>
         <CtcBoton 
             style={styles.button}
             title="Cargar"
             btnColor="#FF0000"
-            customPress={() => setModalVisible(!modalVisible)}
+            customPress={() => CargoUsuario(usuario)}
           />
           </View>
         </View>
         </Modal>
+        <Text style={styles.texto}>{usuario}</Text>
             <View style={styles.unaLinea}>
               <Text style={styles.texto}>Vehículo</Text>
-              <CtcInputText 
-                style={styles.input}
-                placeholder="Vehiculo"
-                onChangeText={(text) => setVehiculo(text.trim())}    
+              <SelectDropdown
+                data={listaVehiculos}
+                onSelect={(selectedItem, index) => {
+                  setVehiculo(selectedItem);  
+                }}
               />
             </View>
             <View style={styles.unaLinea}>
@@ -58,22 +152,14 @@ const CrearTratamiento = () => {
               <CtcInputText 
                 style={styles.input}
                 placeholder="Tratamiento"
-                onChangeText={(text) => setTratamiento(text.trim())}    
-              />
-            </View>
-            <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Fecha Inicio</Text>
-              <CtcInputText 
-                style={styles.input}
-                placeholder="Fecha Inicio"
-                onChangeText={(text) => setFechaIni(text.trim())}    
+                onChangeText={(text) => setTratamiento(text)}    
               />
             </View>
             <CtcBoton 
               style={styles.button}
               title="Crear"
               btnColor="#FF0000"
-              customPress={() => Alert.alert(`Vehiculo:${vehiculo} Tratamiento:${tratamiento}`)}
+              customPress={() => CargoTratamiento()}
             />
           </View>
         </View>

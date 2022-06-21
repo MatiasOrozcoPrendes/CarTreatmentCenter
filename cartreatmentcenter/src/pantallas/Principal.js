@@ -2,13 +2,29 @@ import React from 'react'
 import { useEffect } from 'react'
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
 import CtcBoton from '../componentes/CtcBoton'
-import { CrearTablaUsuario } from '../database/FuncionesABM'
+import { CrearTablaUsuario, CrearTablaVehiculo, CrearTablaTratamiento } from '../database/FuncionesABM'
+import DatabaseConnection from '../database/database-connection';
+const db = DatabaseConnection.getConnection();
 
 const Principal = ({ navigation }) => {
   useEffect(() => {
-    CrearTablaUsuario()
+    CrearTablaUsuario();
+    CrearTablaVehiculo();
+    CrearTablaTratamiento();
   }, []);
-      
+  function borrarBaseDatos() {
+    // console.log('Borro la base de datos');
+    // db.transaction( (txn) => {
+    //   txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
+    // });
+    // db.transaction( (txn) => {
+    //   txn.executeSql('DROP TABLE IF EXISTS vehiculos', []);
+    // });
+    db.transaction( (txn) => {
+      txn.executeSql('DROP TABLE IF EXISTS tratamientos', []);
+    });
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewContainer}>
@@ -29,13 +45,19 @@ const Principal = ({ navigation }) => {
                  style={styles.button}
                  title="Tratamientos Activos"
                  btnColor="#FF0000"
-                 customPress={() => navigation.navigate("Tratamientos")}
+                 customPress={() => navigation.navigate("ModificarTratamiento")}
               />
               <CtcBoton 
                  style={styles.button}
                  title="Tratamientos Finalizados"
                  btnColor="#FF0000"
                  customPress={() => navigation.navigate("BuscarTratamiento")}
+              />
+              <CtcBoton 
+                 style={styles.button}
+                 title="Borrar Base de Datos"
+                 btnColor="#FF0000"
+                 customPress={() => borrarBaseDatos()}
               />
              
             </View>

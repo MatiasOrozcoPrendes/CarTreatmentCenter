@@ -12,8 +12,9 @@ const db = DatabaseConnection.getConnection();
             if (res.rows.length == 0) {
               txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
               txn.executeSql(
-                'CREATE TABLE IF NOT EXISTS usuarios(usuarioId INTEGER PRIMARY KEY AUTOINCREMENT, usuarioCI INTEGER, usuarioNombre VARCHAR(20), usuarioApellido VARCHAR(20))',
+                'CREATE TABLE IF NOT EXISTS usuarios(usuarioId INTEGER PRIMARY KEY AUTOINCREMENT, usuarioCI INTEGER UNIQUE, usuarioNombre VARCHAR(20), usuarioApellido VARCHAR(20))',
                 []
+
               );
             }
           }
@@ -34,7 +35,7 @@ const db = DatabaseConnection.getConnection();
                   { cancelable: false }
                 );
               } else {
-                Alert.alert("Error al agregar el Pokemon");
+                Alert.alert("Error al agregar el usuario");
               }
             }
           );
@@ -71,62 +72,127 @@ const db = DatabaseConnection.getConnection();
           });
     }
 
-    function CrearTablaVehiculo(){
-        db.transaction((tx) =>{
-            tx.executeSql(`CREATE TABLE IF NOT EXIST Vehiculos(
-                VehiculoId int identity(1,1) primary key,
-                Matricula varchar(10) unique,
-                Marca varchar(20),
-                Color varchar(20),
-                Serial varchar(50));`)
-        })
-    }
-
-    export function AñadirVehiculo(Matricula, Marca, Color, Serial){
-        CrearTablaVehiculo();
-        db.transaction((tx) => {
-            tx.executeSql(`INSERT INTO Vehiculos VALUES(${Matricula},${Marca},${Color},${Serial});`);
-            Alert.alert(`Matricula:${Matricula} Marca:${Marca} Color:${Color}`);
-            return true;
+    export function CrearTablaVehiculo(){
+        db.transaction( (txn) => {
+            txn.executeSql(
+              "SELECT name FROM sqlite_master WHERE type='table' AND name='vehiculos'",
+              [],
+               (tx, res) =>{
+                if (res.rows.length == 0) {
+                  txn.executeSql('DROP TABLE IF EXISTS vehiculos', []);
+                  txn.executeSql(
+                    'CREATE TABLE IF NOT EXISTS vehiculos(vehiculoId INTEGER PRIMARY KEY AUTOINCREMENT, matricula VARCHAR(20) UNIQUE, usuarioCI INTEGER, marca VARCHAR(20), color VARCHAR(20), serial VARCHAR(50))',
+                    []
+                  );
+                }
+              }
+            );
         });
     }
 
-    export function ModificarVehiculo(Matricula, Marca, Color, Serial){
+    export function AñadirVehiculo(Matricula, UsuarioCI,  Marca, Color, Serial){
+        debugger;
         db.transaction((tx) => {
-            tx.executeSql(`UPDATE INTO Vehiculos SET Matricula = ${Matricula} Marca = ${Marca} Color = ${Color} Serial = ${Serial}
-            WHERE Matricula = ${Matricula};`);
-            return true;
+          tx.executeSql(
+            `INSERT INTO vehiculos (matricula, usuarioCI, marca, color, serial) VALUES (?, ?, ?, ?, ?)`,
+            [Matricula, UsuarioCI, Marca, Color, Serial],
+            (tx, results) => {
+              if (results.rowsAffected > 0) {
+                Alert.alert("Exito", "Vehiculo Creardo Correctamente",
+                  [{text: "Ok",},],
+                  { cancelable: false }
+                );
+              } else {
+                Alert.alert("Error al agregar el Vehiculo");
+              }
+            }
+          );
         });
+    }
+
+    export function ModificarVehiculo(Matricula, UsuarioCI,  Marca, Color, Serial){
+        debugger;
+        db.transaction((tx) => {
+            tx.executeSql(
+              "UPDATE vehiculos SET usuarioCI = ?, marca = ?, color = ?, serial = ? WHERE matricula = ?",
+              [UsuarioCI, Marca, Color, Serial, Matricula],
+              (tx, results) => {
+                Alert.alert("Vehiculo actualizado");
+              }
+            );
+          });
     }
 
     export function EliminarVehiculo(Matricula){
         db.transaction((tx) => {
-            tx.executeSql(`DELETE FROM Vehiculos WHERE Matricula = ${Matricula};`);
-            return true;
-        });
+            tx.executeSql(
+              `DELETE FROM vehiculos WHERE matricula = ?`,
+              [Matricula],
+              (tx, results) => {
+                // validar resultado
+                if (results.rowsAffected > 0) {
+                  Alert.alert("Vehiculo eliminado");
+                } else {
+                  Alert.alert("El vehiculo no existe");
+                }
+              }
+            );
+          });
     }
 
-    function CrearTablaTratamiento(){
-        db.transaction((tx) =>{
-            tx.executeSql(`CREATE TABLE IF NOT EXIST Tratamientos(
-                TratamientoId int identity(1,1) primary key,
-                VehiculoId int references Vehiculos(VehiculoId),
-                Tratamiento varchar(100),
-                FechaInicioTratamiento varchar(20));`)
-        })
+    export function CrearTablaTratamiento(){
+      db.transaction( (txn) => {
+        txn.executeSql(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='tratamientos'",
+          [],
+           (tx, res) =>{
+            if (res.rows.length == 0) {
+              txn.executeSql('DROP TABLE IF EXISTS tratamientos', []);
+              txn.executeSql(
+                'CREATE TABLE IF NOT EXISTS tratamientos(tratamientoId INTEGER PRIMARY KEY AUTOINCREMENT, matricula VARCHAR(20), tratamiento VARCHAR(100), fechaInicioTratamiento VARCHAR(20), fechaFinalTratamiento VARCHAR(20), manoDeObra INTEGER, costo INTEGER)',
+                []
+
+              );
+            }
+          }
+        );
+      });
+
     }
 
-    export function AñadirTratamiento(VehiculoId, Tratamiento, FechaInicioTratamiento){
-        CrearTablaTratamiento();
+    export function AñadirTratamiento(Matricula, Tratamiento, FechaInicioTratamiento, FechaFinalTratamiento, ManoDeObra, Costo){
+      debugger;
+      db.transaction((tx) => {
+        tx.executeSql(
+          `INSERT INTO tratamientos (matricula, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, costo) VALUES (?, ?, ?, ?, ?, ?)`,
+          [Matricula, Tratamiento, FechaInicioTratamiento, FechaFinalTratamiento, ManoDeObra, Costo],
+          (tx, results) => {
+            if (results.rowsAffected > 0) {
+              Alert.alert("Exito", "Tratamiento Creardo Correctamente",
+                [{text: "Ok",},],
+                { cancelable: false }
+              );
+            } else {
+              Alert.alert("Error al agregar el tratamiento");
+            }
+          }
+        );
+      });
+    }
+
+    export function ModTratamiento(TratamientoID, Matricula, Tratamiento, FechaInicioTratamiento, FechaFinalTratamiento, ManoDeObra, Costo){
+      debugger;
         db.transaction((tx) => {
-            tx.executeSql(`INSERT INTO Tratamientos VALUES(${VehiculoId},${Tratamiento},${FechaInicioTratamiento});`);
-            Alert.alert(`Vehiculo:${VehiculoId} Tratamiento:${Tratamiento}`);
-            return true;
-        });
-    }
-
-    export function ModificarTratamiento(TratamientoId, VehiculoId, Tratamiento, FechaInicioTratamiento){
-        db.transaction((tx) => {
+            tx.executeSql(
+              "UPDATE tratamientos SET matricula = ?, tratamiento = ?, fechaInicioTratamiento = ?, fechaFinalTratamiento = ?, manoDeObra = ?, costo = ? WHERE tratamientoId = ?",
+              [Matricula, Tratamiento, FechaInicioTratamiento, FechaFinalTratamiento, ManoDeObra, Costo, TratamientoID],
+              (tx, results) => {
+                Alert.alert("Vehiculo actualizado");
+              }
+            );
+          });  
+      
+      db.transaction((tx) => {
             tx.executeSql(`UPDATE INTO Tratamientos SET VehiculoId = ${VehiculoId} Tratamiento = ${Tratamiento} FechaInicioTratamiento = ${FechaInicioTratamiento}
             WHERE TratamientoId = ${TratamientoId};`);
             return true;

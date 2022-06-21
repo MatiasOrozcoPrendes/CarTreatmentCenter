@@ -3,7 +3,10 @@ import React from 'react'
 
 const CtcBoton = (props) => {
   return (
-    <TouchableOpacity style={[styles.button, props.style, {backgroundColor: props.btnColor}]} onPress={props.customPress}>
+    <TouchableOpacity 
+    style={[styles.button, props.style, {backgroundColor: props.btnColor}]} 
+    disabled={props.disabled}
+    onPress={props.customPress}>
         <View style={styles.view}>
             <Text style={styles.text}>{props.title}</Text>
         </View>

@@ -11,11 +11,7 @@ import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
 
 const GestionarUsuarios = ({ navigation }) => {
-  const [vehiculos, setVehiculos] = useState([ { matricula: "LAA-420", marca: "Volvo", color: "Rojo", serial: "25487", ciUsuario: "43620097"},
-                                                { matricula: "LAA-421", marca: "Nissan", color: "Azul", serial: "78625", ciUsuario: "12345678"},
-                                                { matricula: "LAA-422", marca: "Toyota", color: "Negro", serial: "98643", ciUsuario: "43620097"},
-                                                { matricula: "LAA-423", marca: "Ford", color: "Amarillo", serial: "56871", ciUsuario: "87654321"},
-                                                { matricula: "LAA-424", marca: "Chevrolet", color: "Verde", serial: "45963", ciUsuario: "45678912"},]);
+  const [vehiculos, setVehiculos] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
@@ -33,7 +29,7 @@ const GestionarUsuarios = ({ navigation }) => {
             style={styles.carta}
             texto={item.matricula}
             btnColor="#A9BCF5"
-            customPress={() => setVehiculo(item)}
+            customPress={() => Alert.alert(item.matricula)}
           />
       </View>
     );
@@ -57,7 +53,7 @@ const GestionarUsuarios = ({ navigation }) => {
                 let usuario
                 for (let i = 0; i < results.rows.length; ++i)
                 temp.push(results.rows.item(i));
-                temp.map((unUsuario, index) => {
+                temp.map((unUsuario) => {
                     usuario = {
                         usuarioCI: unUsuario.usuarioCI,
                         usuarioNombre: unUsuario.usuarioNombre,
@@ -65,6 +61,28 @@ const GestionarUsuarios = ({ navigation }) => {
                     }
                     usuarios.push(usuario);
                     setUsuarios(usuarios);                        
+                })
+              }
+            });
+        });
+        let vehiculos = [];
+        db.transaction((tx) => {
+            tx.executeSql(`SELECT * FROM vehiculos`, [], (tx, results) => {
+              if (results.rows.length > 0) {
+                let temp = [];
+                let vehiculo
+                for (let i = 0; i < results.rows.length; ++i)
+                temp.push(results.rows.item(i));
+                temp.map((unVehiculo) => {
+                    vehiculo = {
+                        matricula: unVehiculo.matricula,
+                        marca: unVehiculo.marca,
+                        color: unVehiculo.color,
+                        serial: unVehiculo.serial,
+                        usuarioCI: unVehiculo.usuarioCI
+                    }
+                    vehiculos.push(vehiculo);
+                    setVehiculos(vehiculos);                        
                 })
               }
             });
@@ -87,7 +105,7 @@ const GestionarUsuarios = ({ navigation }) => {
     });
     let auxVehiculos = [];
     vehiculos.map(item => {
-      if (item.ciUsuario == auxCi){
+      if (item.usuarioCI == auxCi){
         auxVehiculos.push(item);
       }
     });
@@ -201,26 +219,12 @@ const GestionarUsuarios = ({ navigation }) => {
           data={listaVehiculos}
           renderItem={({ item }) => listarVehiculos(item)}
         />
-        <View style={styles.unaLinea}>
-          <CtcBoton 
-            style={styles.button}
-            title="Agregar"
-            btnColor="#FF0000"
-            customPress={() => navigation.navigate("AgregarVehiculo")}
-          />
-          <CtcBoton 
-            style={styles.button}
-            title="Modificar"
-            btnColor="#FF0000"
-            customPress={() => navigation.navigate("ModificarVehiculo")}
-          />
-          <CtcBoton 
-            style={styles.button}
-            title="Eliminar"
-            btnColor="#FF0000"
-            customPress={() => Alert.alert(`Elimino:${vehiculo.matricula}`)}
-          />
-        </View>
+        <CtcBoton 
+          style={styles.button2}
+          title="Vehículos"
+          btnColor="#FF0000"
+          customPress={() => navigation.navigate("AgregarVehiculo")}
+        />
       </View>
     </View>
 </SafeAreaView>
@@ -258,6 +262,10 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 100, 
+    height: 80,
+  },
+  button2: {
+    width: 200, 
     height: 80,
   },
   carta:{

@@ -17,8 +17,29 @@ class CrearUsuarios extends Component{
       [inputName]: inputValue
     }))
   }
+
+  AgregarUsuario = () => {
+    const { nombre, apellido, ci } = this.state
+    if(nombre === '' || apellido === '' || ci === ''){
+      Alert.alert('Error', 'Debe completar todos los campos')
+    }
+    else{
+      if (ci.length !== 8){
+        Alert.alert('Error', 'El CI debe tener 8 dígitos')
+      }
+      else{
+        AñadirUsuario(ci, nombre, apellido)
+        this.setState({
+          nombre: '',
+          apellido: '',
+          ci: ''
+        })
+      }
+      
+    }
+  }
+
   render(){	
-  
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.viewContainer}>
@@ -46,18 +67,20 @@ class CrearUsuarios extends Component{
               <CtcInputText 
                 style={styles.input}
                 placeholder="CI"
+                keyboardType="numeric"
+                maxLength={8}
                 value={this.state.ci}
-                onChangeText={(value) => this.handleInputChange('ci', value)}    
+                onChangeText={(value) => this.handleInputChange('ci', value)}
+
+                
               />
             </View>
             <CtcBoton 
                style={styles.button}
                title="Crear"
                btnColor="#FF0000"
-               customPress={() => { AñadirUsuario(this.state.ci, this.state.nombre, this.state.apellido),
-                 this.handleInputChange('nombre', ''),
-                 this.handleInputChange('apellido', ''),
-                 this.handleInputChange('ci', '')}}
+               customPress={() => { this.AgregarUsuario() }}
+                 //
             />
           </View>
         </View>
