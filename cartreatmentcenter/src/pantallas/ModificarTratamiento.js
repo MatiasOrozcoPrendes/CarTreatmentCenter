@@ -125,6 +125,7 @@ const ModificarTratamiento = ({ navigation }) => {
               visible={modalVisible}
               onRequestClose={() => {
                 setModalVisible(!modalVisible);
+                navigation.navigate("Inicio")
               }}
             >
               <View style={styles.centeredView}>
