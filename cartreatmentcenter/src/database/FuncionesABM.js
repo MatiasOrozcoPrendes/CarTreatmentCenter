@@ -195,10 +195,20 @@ const db = DatabaseConnection.getConnection();
     }
 
     export function EliminarTratamiento(TratamientoId){
-        db.transaction((tx) => {
-            tx.executeSql(`DELETE FROM Tratamientos WHERE TratamientoId = ${TratamientoId};`);
-            return true
-        });
+      db.transaction((tx) => {
+        tx.executeSql(
+          `DELETE FROM tratamientos WHERE tratamientoId = ?`,
+          [TratamientoId],
+          (tx, results) => {
+            // validar resultado
+            if (results.rowsAffected > 0) {
+              Alert.alert("Tratamiento eliminado");
+            } else {
+              Alert.alert("El tratamiento no existe");
+            }
+          }
+        );
+      });
     }
 
     function CrearTablaInsumos(){

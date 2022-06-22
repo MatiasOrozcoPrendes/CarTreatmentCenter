@@ -6,7 +6,7 @@ import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaRepuesto from '../componentes/CtcCartaRepuesto'
 import CtcCartaInsumo from '../componentes/CtcCartaInsumo'
 import CtcCartaTratamiento from '../componentes/CtcCartaTratamiento';
-import { ModTratamiento } from '../database/FuncionesABM'
+import { ModTratamiento, EliminarTratamiento } from '../database/FuncionesABM'
 import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
 
@@ -69,6 +69,14 @@ const ModificarTratamiento = ({ navigation }) => {
     setTratamientoID(pTratamiento.tratamientoID);
     setModalVisible(!modalVisible);
   }
+
+  function EliminoTratamiento(){
+    if (tratamientoID === ''){
+      Alert.alert("Error", "No se ha seleccionado ningun tratamiento");
+    }
+    EliminarTratamiento(tratamientoID);
+    navigation.navigate('Inicio');
+  } 
 
   function ActualizoTratamiento(){
     if ( tratamiento === '' || fechaInicioTratamiento === '' || fechaFinalTratamiento === '' || manoDeObra === '' || vehiculo === ''){
@@ -304,7 +312,7 @@ const ModificarTratamiento = ({ navigation }) => {
                   style={styles.button}
                   title="Eliminar"
                   btnColor="#FF0000"
-                  customPress={() => Alert.alert(`Vehiculo:${vehiculo} Tratamiento:${tratamiento}`)}
+                  customPress={() => EliminoTratamiento()}
                 />
             </View>
             
