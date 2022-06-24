@@ -29,7 +29,7 @@ const GestionarUsuarios = ({ navigation }) => {
             style={styles.carta}
             texto={item.matricula}
             btnColor="#A9BCF5"
-            customPress={() => Alert.alert(item.matricula)}
+            customPress={() => navigation.navigate("AgregarVehiculo", item)}
           />
       </View>
     );
@@ -91,7 +91,7 @@ const GestionarUsuarios = ({ navigation }) => {
 
   function EliminoUsuario() {
     EliminarUsuario(ci), 
-    navigation.navigate('Usuarios')
+    navigation.navigate('Usuarios')   
   }
   function CargoUsuario(pUsuario){
     let auxCi = pUsuario.substring(0,8);
@@ -221,9 +221,9 @@ const GestionarUsuarios = ({ navigation }) => {
         />
         <CtcBoton 
           style={styles.button2}
-          title="Vehículos"
+          title="Agregar Vehículos"
           btnColor="#FF0000"
-          customPress={() => navigation.navigate("AgregarVehiculo")}
+          customPress={() => navigation.navigate("AgregarVehiculo", usuario)}
         />
       </View>
     </View>
