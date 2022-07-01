@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
 import CtcBoton from '../componentes/CtcBoton'
-import { CrearTablaUsuario, CrearTablaVehiculo, CrearTablaTratamiento } from '../database/FuncionesABM'
+import { CrearTablaUsuario, CrearTablaVehiculo, CrearTablaTratamiento, CrearTablaInsumos, CrearTablaTratamientoInsumo, CrearTablaRepuestos, CrearTablaTratamientoRepuesto } from '../database/FuncionesABM'
 import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
 
@@ -11,18 +11,35 @@ const Principal = ({ navigation }) => {
     CrearTablaUsuario();
     CrearTablaVehiculo();
     CrearTablaTratamiento();
+    CrearTablaInsumos();
+    CrearTablaTratamientoInsumo();
+    CrearTablaRepuestos();
+    CrearTablaTratamientoRepuesto();
   }, []);
   function borrarBaseDatos() {
-    // console.log('Borro la base de datos');
-    // db.transaction( (txn) => {
-    //   txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
-    // });
-    // db.transaction( (txn) => {
-    //   txn.executeSql('DROP TABLE IF EXISTS vehiculos', []);
-    // });
+    console.log('Borro la base de datos');
+    db.transaction( (txn) => {
+      txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
+    });
+    db.transaction( (txn) => {
+      txn.executeSql('DROP TABLE IF EXISTS vehiculos', []);
+    });
     db.transaction( (txn) => {
       txn.executeSql('DROP TABLE IF EXISTS tratamientos', []);
     });
+    db.transaction( (txn) => {
+      txn.executeSql('DROP TABLE IF EXISTS insumos', []);
+    });
+    db.transaction( (txn) => {
+      txn.executeSql('DROP TABLE IF EXISTS tratamientoInsumos', []);
+    });
+    db.transaction( (txn) => {
+      txn.executeSql('DROP TABLE IF EXISTS repuestos', []);
+    });
+    db.transaction( (txn) => {
+      txn.executeSql('DROP TABLE IF EXISTS tratamientoRepuestos', []);
+    });
+
   }
 
   return (

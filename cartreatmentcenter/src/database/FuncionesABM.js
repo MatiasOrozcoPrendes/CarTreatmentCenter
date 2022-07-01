@@ -1,5 +1,4 @@
 import { Alert } from 'react-native'
-import { useState } from "react";
 import DatabaseConnection from "./database-connection";
 const db = DatabaseConnection.getConnection();
 
@@ -210,168 +209,284 @@ const db = DatabaseConnection.getConnection();
       });
     }
 
-    function CrearTablaInsumos(){
-        db.transaction((tx) =>{
-            tx.executeSql(`CREATE TABLE IF NOT EXIST Insumos(
-                InsumoId int identity(1,1) primary key,
-                InsumoNombre varchar(20),
-                InsumoPrecio money);`)
-        })
+    export function CrearTablaInsumos(){
+      db.transaction( (txn) => {
+        txn.executeSql(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='insumos'",
+          [],
+           (tx, res) =>{
+            if (res.rows.length == 0) {
+              txn.executeSql('DROP TABLE IF EXISTS insumos', []);
+              txn.executeSql(
+                'CREATE TABLE IF NOT EXISTS insumos(insumoId INTEGER PRIMARY KEY AUTOINCREMENT, insumoNombre VARCHAR(20), insumoPrecio INTEGER)',
+                []
+
+              );
+            }
+          }
+        );
+      });
     }
     
     export function AñadirInsumo(InsumoNombre, InsumoPrecio){
-        CrearTablaInsumos();
-        db.transaction((tx) => {
-            tx.executeSql(`INSERT INTO Insumos VALUES(${InsumoNombre},${InsumoPrecio});`);
-            Alert.alert(`Nombre:${InsumoNombre} Precio$:${InsumoPrecio}`);
-            return true;
-        });
+      debugger;
+      db.transaction((tx) => {
+        tx.executeSql(
+          `INSERT INTO insumos (insumoNombre, insumoPrecio) VALUES (?, ?)`,
+          [InsumoNombre, InsumoPrecio],
+          (tx, results) => {
+            if (results.rowsAffected > 0) {
+              Alert.alert("Exito", "Insumo Creardo Correctamente",
+                [{text: "Ok",},],
+                { cancelable: false }
+              );
+            } else {
+              Alert.alert("Error al agregar el insumo");
+            }
+          }
+        );
+      });  
     }
 
     export function ModificarInsumo(InsumoId, InsumoNombre, InsumoPrecio){
-        db.transaction((tx) => {
-            tx.executeSql(`UPDATE INTO Insumos SET InsumoNombre = ${InsumoNombre} InsumoPrecio = ${InsumoPrecio}
-            WHERE InsumoId = ${InsumoId};`);
-            return true;
-        });
+      debugger;
+      db.transaction((tx) => {
+          tx.executeSql(
+            "UPDATE insumos SET insumoNombre = ?, insumoPrecio = ? WHERE insumoId = ?",
+            [InsumoNombre, InsumoPrecio, InsumoId],
+            (tx, results) => {
+              Alert.alert("Insumos actualizado");
+            }
+          );
+        });   
     }
 
     export function EliminarInsumo(InsumoId){
-        db.transaction((tx) => {
-            tx.executeSql(`DELETE FROM Insumos WHERE InsumoId = ${InsumoId};`);
-            return true
-        });
+      db.transaction((tx) => {
+        tx.executeSql(
+          `DELETE FROM insumos WHERE insumoId = ?`,
+          [InsumoId],
+          (tx, results) => {
+            // validar resultado
+            if (results.rowsAffected > 0) {
+              Alert.alert("Insumo eliminado");
+            } else {
+              Alert.alert("El insumo no existe");
+            }
+          }
+        );
+      });
     }
 
-    function CrearTablaRepuestos(){
-        db.transaction((tx) =>{
-            tx.executeSql(`CREATE TABLE IF NOT EXIST Repuestos(
-                RepuestoId int identity(1,1) primary key,
-                RepuestoNombre varchar(20),
-                RepuestoPrecio money);`)
-        })
+    export function CrearTablaRepuestos(){
+      db.transaction( (txn) => {
+        txn.executeSql(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='repuestos'",
+          [],
+           (tx, res) =>{
+            if (res.rows.length == 0) {
+              txn.executeSql('DROP TABLE IF EXISTS repuestos', []);
+              txn.executeSql(
+                'CREATE TABLE IF NOT EXISTS repuestos(repuestoId INTEGER PRIMARY KEY AUTOINCREMENT, repuestoNombre VARCHAR(20), repuestoPrecio INTEGER)',
+                []
+              );
+            }
+          }
+        );
+      });
     }
     
     export function AñadirRepuesto(RepuestoNombre, RepuestoPrecio){
-        CrearTablaRepuestos();
-        db.transaction((tx) => {
-            tx.executeSql(`INSERT INTO Repuestos VALUES(${RepuestoNombre},${RepuestoPrecio});`);
-            Alert.alert(`Nombre:${RepuestoNombre} Precio$:${RepuestoPrecio}`);
-            return true;
-        });
+      debugger;
+      db.transaction((tx) => {
+        tx.executeSql(
+          `INSERT INTO repuestos (repuestoNombre, repuestoPrecio) VALUES (?, ?)`,
+          [RepuestoNombre, RepuestoPrecio],
+          (tx, results) => {
+            if (results.rowsAffected > 0) {
+              Alert.alert("Exito", "Repuesto Creardo Correctamente",
+                [{text: "Ok",},],
+                { cancelable: false }
+              );
+            } else {
+              Alert.alert("Error al agregar el repuesto");
+            }
+          }
+        );
+      }); 
     }
 
     export function ModificarRepuesto(RepuestoId, RepuestoNombre, RepuestoPrecio){
-        db.transaction((tx) => {
-            tx.executeSql(`UPDATE INTO Repuestos SET InsumoNombre = ${RepuestoNombre} InsumoPrecio = ${RepuestoPrecio}
-            WHERE RepuestoId = ${RepuestoId};`);
-            return true;
-        });
+      debugger;
+      db.transaction((tx) => {
+          tx.executeSql(
+            "UPDATE repuestos SET repuestoNombre = ?, repuestoPrecio = ? WHERE repuestoId = ?",
+            [RepuestoNombre, RepuestoPrecio, RepuestoId],
+            (tx, results) => {
+              Alert.alert("Repuestos actualizado");
+            }
+          );
+        });   
     }
 
     export function EliminarRepuesto(RepuestoId){
-        db.transaction((tx) => {
-            tx.executeSql(`DELETE FROM Repuestos WHERE RepuestoId = ${RepuestoId};`);
-            return true
-        });
+      db.transaction((tx) => {
+        tx.executeSql(
+          `DELETE FROM repuestos WHERE repuestoId = ?`,
+          [RepuestoId],
+          (tx, results) => {
+            // validar resultado
+            if (results.rowsAffected > 0) {
+              Alert.alert("Repuesto eliminado");
+            } else {
+              Alert.alert("El repuesto no existe");
+            }
+          }
+        );
+      });
     }
 
-    function CrearTablaTratamientoFinalizado(){
-        db.transaction((tx) =>{
-            tx.executeSql(`CREATE TABLE IF NOT EXIST TratamientosFinalizados(
-                TratamientoFinalId int identity(1,1) primary key,
-                TratamientoId int references Tratamientos(TratamientoId)
-                FechaFinalTratamiento varchar(20),
-                ManoDeObra money);`)
-        })
-    }
-
-    export function AñadirTratamientoFinalizado(TratamientoId, FechaFinalTratamiento, ManoDeObra){
-        CrearTablaTratamientoFinalizado();
-        db.transaction((tx) => {
-            tx.executeSql(`INSERT INTO TratamientosFinalizados VALUES(${TratamientoId},${FechaFinalTratamiento},${ManoDeObra});`);
-            Alert.alert(`Costo:${ManoDeObra}`);
-            return true;
-        });
-    }
-
-    export function ModificarTratamientoFinalizado(TratamientoFinalId, TratamientoId, FechaFinalTratamiento, ManoDeObra){
-        db.transaction((tx) => {
-            tx.executeSql(`UPDATE INTO TratamientosFinalizados SET TratamientoId = ${TratamientoId} FechaInicioTratamiento = ${FechaFinalTratamiento} ManoDeObra = ${ManoDeObra} 
-            WHERE TratamientoId = ${TratamientoFinalId};`);
-            return true;
-        });
-    }
-
-    export function EliminarTratamientoFinalizado(TratamientoFinalId){
-        db.transaction((tx) => {
-            tx.executeSql(`DELETE FROM TratamientosFinalizados WHERE TratamientoFinalId = ${TratamientoFinalId};`);
-            return true
-        });
-    }
-
-    function CrearTablaTratamientoRepuesto(){
-        db.transaction((tx) =>{
-            tx.executeSql(`CREATE TABLE IF NOT EXIST TratamientoRepuestos(
-                TratamientoRepuestoId int identity(1,1) primary key,
-                TratamientoId int references Tratamientos(TratamientoId),
-                RepuestoId int references Repuestos(RepuestoId),
-                Cantidad int));`)
-        })
+    export function CrearTablaTratamientoRepuesto(){
+      db.transaction( (txn) => {
+        txn.executeSql(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='tratamientoRepuestos'",
+          [],
+           (tx, res) =>{
+            if (res.rows.length == 0) {
+              txn.executeSql('DROP TABLE IF EXISTS tratamientoRepuestos', []);
+              txn.executeSql(
+                'CREATE TABLE IF NOT EXISTS tratamientoRepuestos(tratamientoRepuestoId INTEGER PRIMARY KEY AUTOINCREMENT, tratamientoId INTEGER, repuestoId INTEGER, cantidad INTEGER)',
+                []
+              );
+            }
+          }
+        );
+      });
     }
 
     export function AñadirTratamientoRepuesto(TratamientoId, RepuestoId, Cantidad){
-        CrearTablaTratamientoRepuesto();
-        db.transaction((tx) => {
-            tx.executeSql(`INSERT INTO TratamientoRepuestos VALUES(${TratamientoId},${RepuestoId},${Cantidad});`);
-            return true;
-        });
+      debugger;
+      let Reotrno = false
+      db.transaction((tx) => {
+        tx.executeSql(
+          `INSERT INTO tratamientoRepuestos (tratamientoId, repuestoId, cantidad) VALUES (?, ?, ?)`,
+          [TratamientoId, RepuestoId, Cantidad],
+          (tx, results) => {
+            if (results.rowsAffected > 0) {
+              Reotrno = true;
+              Alert.alert("Exito", "Repuesto Agregado Correctamente",
+                [{text: "Ok",},],
+                { cancelable: false }
+              );
+              return Reotrno;
+            } else {
+              Alert.alert("Error al agregar el repuesto");
+            }
+          }
+        );
+      });  
+      return Reotrno;
     }
 
     export function ModificarTratamientoRepuesto(TratamientoRepuestoId, TratamientoId, RepuestoId, Cantidad){
-        db.transaction((tx) => {
-            tx.executeSql(`UPDATE INTO TratamientoRepuestos SET TratamientoId = ${TratamientoId} RepuestoId = ${RepuestoId} Cantidad = ${Cantidad}
-            WHERE TratamientoRepuestoId = ${TratamientoRepuestoId};`);
-            return true;
-        });
+      debugger;
+      db.transaction((tx) => {
+          tx.executeSql(
+            "UPDATE tratamientoRepuestos SET tratamientoId = ?, repuestoId = ?, cantidad = ? WHERE tratamientoRepuestoId = ?",
+            [TratamientoId, RepuestoId, Cantidad, TratamientoRepuestoId],
+            (tx, results) => {
+              Alert.alert("Repuesto actualizado");
+            }
+          );
+        });   
     }
 
     export function EliminarTratamientoRepuesto(TratamientoRepuestoId){
-        db.transaction((tx) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          `DELETE FROM tratamientoRepuestos WHERE tratamientoRepuestoId = ? `,
+          [TratamientoRepuestoId],
+          (tx, results) => {
+            // validar resultado
+            if (results.rowsAffected > 0) {
+              Alert.alert("Repuesto eliminado");
+            } else {
+              Alert.alert("El repuesto no existe");
+            }
+          }
+        );
+      });  
+      db.transaction((tx) => {
             tx.executeSql(`DELETE FROM TratamientoRepuestos WHERE TratamientoRepuestoId = ${TratamientoRepuestoId};`);
             return true
         });
     }
 
-    function CrearTablaTratamientoInsumo(){
-        db.transaction((tx) =>{
-            tx.executeSql(`CREATE TABLE IF NOT EXIST TratamientoInsumos(
-                TratamientoInsumoId int identity(1,1) primary key,
-                TratamientoId int references Tratamientos(TratamientoId),
-                InsumoId int references Insumos(InsumoId),
-                Cantidad int));`)
-        })
+    export function CrearTablaTratamientoInsumo(){
+      db.transaction( (txn) => {
+        txn.executeSql(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='tratamientoInsumos'",
+          [],
+           (tx, res) =>{
+            if (res.rows.length == 0) {
+              txn.executeSql('DROP TABLE IF EXISTS tratamientoInsumos', []);
+              txn.executeSql(
+                'CREATE TABLE IF NOT EXISTS tratamientoInsumos(tratamientoInsumoId INTEGER PRIMARY KEY AUTOINCREMENT, tratamientoId INTEGER, insumoId INTEGER, cantidad INTEGER)',
+                []
+
+              );
+            }
+          }
+        );
+      });
     }
 
     export function AñadirTratamientoInsumo(TratamientoId, InsumoId, Cantidad){
-        CrearTablaTratamientoInsumo();
-        db.transaction((tx) => {
-            tx.executeSql(`INSERT INTO TratamientoInsumos VALUES(${TratamientoId},${InsumoId},${Cantidad});`);
-            return true;
-        });
+      debugger;
+      db.transaction((tx) => {
+        tx.executeSql(
+          `INSERT INTO tratamientoInsumos (tratamientoId, insumoId, cantidad) VALUES (?, ?, ?)`,
+          [TratamientoId, InsumoId, Cantidad],
+          (tx, results) => {
+            if (results.rowsAffected > 0) {
+              Alert.alert("Exito", "Insumo Agregado Correctamente",
+                [{text: "Ok",},],
+                { cancelable: false }
+              );
+            } else {
+              Alert.alert("Error al agregar el Insumo");
+            }
+          }
+        );
+      });  
     }
 
     export function ModificarTratamientoInsumo(TratamientoInsumoId, TratamientoId, InsumoId, Cantidad){
-        db.transaction((tx) => {
-            tx.executeSql(`UPDATE INTO TratamientoInsumos SET TratamientoId = ${TratamientoId} InsumoId = ${InsumoId} Cantidad = ${Cantidad}
-            WHERE TratamientoInsumoId = ${TratamientoInsumoId};`);
-            return true;
-        });
+      debugger;
+      db.transaction((tx) => {
+          tx.executeSql(
+            "UPDATE tratamientoInsumos SET tratamientoId = ?, insumoId = ?, cantidad = ? WHERE tratamientoInsumoId = ?",
+            [TratamientoId, InsumoId, Cantidad, TratamientoInsumoId],
+            (tx, results) => {
+              Alert.alert("Insumos actualizado");
+            }
+          );
+        });   
     }
 
     export function EliminarTratamientoInsumo(TratamientoInsumoId){
-        db.transaction((tx) => {
-            tx.executeSql(`DELETE FROM TratamientoInsumos WHERE TratamientoInsumoId = ${TratamientoInsumoId};`);
-            return true
-        });
+      db.transaction((tx) => {
+        tx.executeSql(
+          `DELETE FROM tratamientoInsumos WHERE tratamientoInsumoId = ? `,
+          [TratamientoInsumoId],
+          (tx, results) => {
+            // validar resultado
+            if (results.rowsAffected > 0) {
+              Alert.alert("Insumo eliminado");
+            } else {
+              Alert.alert("El insumo no existe");
+            }
+          }
+        );
+      });
     }

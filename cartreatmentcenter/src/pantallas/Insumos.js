@@ -1,26 +1,92 @@
 import React from 'react'
-import { useState} from "react";
+import { useState, useEffect} from "react";
 import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaInsumo from '../componentes/CtcCartaInsumo'
-
+import { AñadirInsumo, ModificarInsumo, EliminarInsumo } from '../database/FuncionesABM'
+import DatabaseConnection from '../database/database-connection';
+const db = DatabaseConnection.getConnection();
+ 
 const Insumos = () => {
   const [nombre, setNombre] = useState('');
   const [precio, setPrecio] = useState('');
-  const [insumos, setInsumos] = useState([ "Insumo 1", "Insumo 2", "Insumo 3", "Insumo 4", "Insumo 5"]);
+  const [insumoId, setInsumoId] = useState('');
+  const [insumos, setInsumos] = useState([]);
   const listarInsumos = (item) => {
     return (
       <View >
         <CtcCartaInsumo 
             style={styles.carta}
-            texto={item}
+            texto={item.insumoNombre}
             btnColor="#A9BCF5"
-            customPress={() => setNombre(item)}
+            customPress={() => cargoInsumo(item)}
           />
       </View>
     );
   };
+  function TraigoInsumo() {
+    let auxInsumos = [];
+        db.transaction((tx) => {
+            tx.executeSql(`SELECT * FROM insumos`, [], (tx, results) => {
+              if (results.rows.length > 0) {
+                let temp = [];
+                let insumo
+                for (let i = 0; i < results.rows.length; ++i)
+                temp.push(results.rows.item(i));
+                temp.map((unInsumo) => {
+                    insumo = {
+                        insumoId: unInsumo.insumoId,
+                        insumoNombre: unInsumo.insumoNombre,
+                        insumoPrecio: unInsumo.insumoPrecio,
+                    }
+                    auxInsumos.push(insumo);
+                    setInsumos(auxInsumos);                        
+                })
+              }
+            });
+        }); 
+  }
+  function cargoInsumo(item) {
+    setNombre(item.insumoNombre);
+    setPrecio(item.insumoPrecio.toString());
+    setInsumoId(item.insumoId);
+  }
+  function AltaInsumo() {
+    if (nombre.length > 0 && precio.length > 0) {
+      AñadirInsumo(nombre, precio);
+      setNombre('');
+      setPrecio('');
+    } else {
+      Alert.alert('Error', 'Debe completar todos los campos');
+    }
+    TraigoInsumo();
+  }
+  function ModInsumo() {
+    if (nombre.length > 0 && precio.length > 0) {
+      ModificarInsumo(insumoId, nombre, parseInt(precio));
+      setNombre('');
+      setPrecio('');
+      setInsumoId('');
+    } else {
+      Alert.alert('Error', 'Debe completar todos los campos');
+    }
+    TraigoInsumo();
+  }
+  function BajaInsumo() {
+    if (insumoId != '') {
+      EliminarInsumo(insumoId);
+      setInsumoId('');
+    } else {
+      Alert.alert('Error', 'Debe seleccionar un insumo');
+    }
+    TraigoInsumo();
+  }
+
+  useEffect(() => {
+    TraigoInsumo();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
     <View style={styles.viewContainer}>
@@ -31,7 +97,7 @@ const Insumos = () => {
             style={styles.input}
             placeholder="Nombre"
             value={nombre}
-            onChangeText={(text) => setNombre(text.trim())}    
+            onChangeText={(text) => setNombre(text)}    
           />
         </View>
         <View style={styles.unaLinea}>
@@ -39,7 +105,9 @@ const Insumos = () => {
           <CtcInputText 
             style={styles.input}
             placeholder="Precio"
-            onChangeText={(text) => setPrecio(text.trim())}    
+            value={precio}
+            keyboardType="numeric"
+            onChangeText={(text) => setPrecio(text)}    
           />
         </View>
         <View style={styles.unaLinea}>
@@ -47,19 +115,19 @@ const Insumos = () => {
             style={styles.button}
             title="Agregar"
             btnColor="#FF0000"
-            customPress={() => Alert.alert(`Agrego:${nombre}`)}
+            customPress={() => AltaInsumo()}
           />
           <CtcBoton 
             style={styles.button}
             title="Modificar"
             btnColor="#FF0000"
-            customPress={() => Alert.alert(`Modifico:${nombre}`)}
+            customPress={() => ModInsumo()}
           />
           <CtcBoton 
             style={styles.button}
             title="Eliminar"
             btnColor="#FF0000"
-            customPress={() => Alert.alert(`Elimino:${nombre}`)}
+            customPress={() => BajaInsumo()}
           />
         </View>
         <FlatList

@@ -1,26 +1,90 @@
 import React from 'react'
-import { useState} from "react";
+import { useState, useEffect} from "react";
 import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaRepuesto from '../componentes/CtcCartaRepuesto'
+import { AñadirRepuesto, ModificarRepuesto, EliminarRepuesto } from '../database/FuncionesABM'
+import DatabaseConnection from '../database/database-connection';
+const db = DatabaseConnection.getConnection();
 
 const Repuestos = () => {
   const [nombre, setNombre] = useState('');
   const [precio, setPrecio] = useState('');
-  const [repuestos, setRepuestos] = useState([ "Repuesto 1", "Repuesto 2", "Repuesto 3", "Repuesto 4", "Repuesto 5"]);
+  const [repuestoId, setRepuestoId] = useState('');
+  const [repuestos, setRepuestos] = useState([]);
   const listarRepuestos = (item) => {
     return (
       <View >
         <CtcCartaRepuesto 
             style={styles.carta}
-            texto={item}
+            texto={item.repuestoNombre}
             btnColor="#A9BCF5"
-            customPress={() => setNombre(item)}
+            customPress={() => cargoRepuesto(item)}
           />
       </View>
     );
   };
+  function TraigoRepuesto() {
+    let auxRepuestos = [];
+        db.transaction((tx) => {
+            tx.executeSql(`SELECT * FROM repuestos`, [], (tx, results) => {
+              if (results.rows.length > 0) {
+                let temp = [];
+                let repuesto
+                for (let i = 0; i < results.rows.length; ++i)
+                temp.push(results.rows.item(i));
+                temp.map((unRepuesto) => {
+                  repuesto = {
+                    repuestoId: unRepuesto.repuestoId,
+                    repuestoNombre: unRepuesto.repuestoNombre,
+                    repuestoPrecio: unRepuesto.repuestoPrecio,
+                  }
+                  auxRepuestos.push(repuesto);
+                  setRepuestos(auxRepuestos);                        
+                })
+              }
+            });
+        }); 
+  }
+  function cargoRepuesto(item) {
+    setNombre(item.repuestoNombre);
+    setPrecio(item.repestoPrecio.toString());
+    setRepuestoId(item.repuestoId);
+  }
+  function AltaRepuesto() {
+    if (nombre.length > 0 && precio.length > 0) {
+      AñadirRepuesto(nombre, precio);
+      setNombre('');
+      setPrecio('');
+    } else {
+      Alert.alert('Error', 'Debe completar todos los campos');
+    }
+    TraigoRepuesto();
+  }
+  function ModRepuesto() {
+    if (nombre.length > 0 && precio.length > 0) {
+      ModificarRepuesto(repuestoId, nombre, precio);
+      setNombre('');
+      setPrecio('');
+    } else {
+      Alert.alert('Error', 'Debe completar todos los campos');
+    }
+    TraigoRepuesto();
+  }
+  function BajaRepuesto() {
+    if (repuestoId != '') {
+      EliminarRepuesto(repuestoId);
+      setRepuestoId('');
+    } else {
+      Alert.alert('Error', 'Debe seleccionar un repuesto');
+    }
+    TraigoInsumo();
+  }
+  useEffect(() => {
+    TraigoRepuesto();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
     <View style={styles.viewContainer}>
@@ -31,7 +95,7 @@ const Repuestos = () => {
             style={styles.input}
             placeholder="Nombre"
             value={nombre}
-            onChangeText={(text) => setNombre(text.trim())}    
+            onChangeText={(text) => setNombre(text)}    
           />
         </View>
         <View style={styles.unaLinea}>
@@ -39,7 +103,9 @@ const Repuestos = () => {
           <CtcInputText 
             style={styles.input}
             placeholder="Precio"
-            onChangeText={(text) => setPrecio(text.trim())}    
+            value={precio}
+            keyboardType="numeric"
+            onChangeText={(text) => setPrecio(text)}    
           />
         </View>
         <View style={styles.unaLinea}>
@@ -47,19 +113,19 @@ const Repuestos = () => {
             style={styles.button}
             title="Agregar"
             btnColor="#FF0000"
-            customPress={() => Alert.alert(`Agrego:${nombre}`)}
+            customPress={() => AltaRepuesto()}
           />
           <CtcBoton 
             style={styles.button}
             title="Modificar"
             btnColor="#FF0000"
-            customPress={() => Alert.alert(`Modifico:${nombre}`)}
+            customPress={() => ModRepuesto()}
           />
           <CtcBoton 
             style={styles.button}
             title="Eliminar"
             btnColor="#FF0000"
-            customPress={() => Alert.alert(`Elimino:${nombre}`)}
+            customPress={() => BajaRepuesto()}
           />
         </View>
         <FlatList

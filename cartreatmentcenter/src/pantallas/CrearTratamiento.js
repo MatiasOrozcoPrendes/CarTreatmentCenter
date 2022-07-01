@@ -71,7 +71,6 @@ const CrearTratamiento = ({navigation}) => {
     else{
       let fecha = new Date();
       let fechaString = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
-      console.log(vehiculo, tratamiento, fechaString);
       AñadirTratamiento(vehiculo, tratamiento, fechaString, "-", 0, 0);
       navigation.navigate('Inicio');
     }
