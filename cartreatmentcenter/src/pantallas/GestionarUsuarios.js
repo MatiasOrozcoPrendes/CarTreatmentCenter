@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, Modal } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, Modal, KeyboardAvoidingView, ImageBackground  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaVehiculo from '../componentes/CtcCartaVehiculo';
@@ -10,7 +10,8 @@ import { ModificarUsuario, EliminarUsuario } from '../database/FuncionesABM'
 import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
 
-const GestionarUsuarios = ({ navigation }) => {
+const GestionarUsuarios = ({ navigation, route }) => {
+  const recibo = route.params;
   const [vehiculos, setVehiculos] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [nombre, setNombre] = useState('');
@@ -34,7 +35,34 @@ const GestionarUsuarios = ({ navigation }) => {
       </View>
     );
   };
-  useEffect(() => {
+  function EliminoUsuario() {
+    EliminarUsuario(ci), 
+    navigation.navigate('Usuarios')   
+  }
+  function CargoUsuario(pUsuario){
+    if(usuarios.length > 0){
+      let auxCi = pUsuario.substring(0,8);
+      usuarios.map(item => {
+        if (item.usuarioCI == auxCi){
+          setNombre(item.usuarioNombre);
+          setApellido(item.usuarioApellido);
+          setCi(item.usuarioCI.toString());
+          setModalVisible(!modalVisible);
+        }
+      });
+      let auxVehiculos = [];
+      vehiculos.map(item => {
+        if (item.usuarioCI == auxCi){
+          auxVehiculos.push(item);
+        }
+      });
+      setListaVehiculos(auxVehiculos);
+     } else {
+       setModalVisible(!modalVisible);
+       navigation.navigate('Usuarios');
+     }
+  }
+  function TraigoUsuariosLista(){
     db.transaction((tx) => {
       tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
         if (results.rows.length > 0) {
@@ -45,189 +73,185 @@ const GestionarUsuarios = ({ navigation }) => {
         }
       });
     });
+  }
+  function TraigoUsuarios(){
     let usuarios = [];
-        db.transaction((tx) => {
-            tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
-              if (results.rows.length > 0) {
-                let temp = [];
-                let usuario
-                for (let i = 0; i < results.rows.length; ++i)
-                temp.push(results.rows.item(i));
-                temp.map((unUsuario) => {
-                    usuario = {
-                        usuarioCI: unUsuario.usuarioCI,
-                        usuarioNombre: unUsuario.usuarioNombre,
-                        usuarioApellido: unUsuario.usuarioApellido
-                    }
-                    usuarios.push(usuario);
-                    setUsuarios(usuarios);                        
-                })
+    db.transaction((tx) => {
+      tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
+        if (results.rows.length > 0) {
+          let temp = [];
+          let usuario
+          for (let i = 0; i < results.rows.length; ++i)
+          temp.push(results.rows.item(i));
+          temp.map((unUsuario) => {
+              usuario = {
+                  usuarioCI: unUsuario.usuarioCI,
+                  usuarioNombre: unUsuario.usuarioNombre,
+                  usuarioApellido: unUsuario.usuarioApellido
               }
-            });
-        });
-        let vehiculos = [];
-        db.transaction((tx) => {
-            tx.executeSql(`SELECT * FROM vehiculos`, [], (tx, results) => {
-              if (results.rows.length > 0) {
-                let temp = [];
-                let vehiculo
-                for (let i = 0; i < results.rows.length; ++i)
-                temp.push(results.rows.item(i));
-                temp.map((unVehiculo) => {
-                    vehiculo = {
-                        matricula: unVehiculo.matricula,
-                        marca: unVehiculo.marca,
-                        color: unVehiculo.color,
-                        serial: unVehiculo.serial,
-                        usuarioCI: unVehiculo.usuarioCI
-                    }
-                    vehiculos.push(vehiculo);
-                    setVehiculos(vehiculos);                        
-                })
+              usuarios.push(usuario);
+              setUsuarios(usuarios);                        
+          })
+        }
+      });
+    });
+  }
+  function TraigoVehiculos(){
+    let vehiculos = [];
+    db.transaction((tx) => {
+      tx.executeSql(`SELECT * FROM vehiculos`, [], (tx, results) => {
+        if (results.rows.length > 0) {
+          let temp = [];
+          let vehiculo
+          for (let i = 0; i < results.rows.length; ++i)
+          temp.push(results.rows.item(i));
+          temp.map((unVehiculo) => {
+              vehiculo = {
+                  matricula: unVehiculo.matricula,
+                  marca: unVehiculo.marca,
+                  color: unVehiculo.color,
+                  serial: unVehiculo.serial,
+                  usuarioCI: unVehiculo.usuarioCI
               }
-            });
-        });
+              vehiculos.push(vehiculo);
+              setVehiculos(vehiculos);                        
+          })
+        }
+      });
+    });
+  }
+  useEffect(() => {
+    TraigoUsuariosLista();
+    TraigoUsuarios();
+    TraigoVehiculos();    
   }, []);
-
-  function EliminoUsuario() {
-    EliminarUsuario(ci), 
-    navigation.navigate('Usuarios')   
-  }
-  function CargoUsuario(pUsuario){
-    let auxCi = pUsuario.substring(0,8);
-    usuarios.map(item => {
-      if (item.usuarioCI == auxCi){
-        setNombre(item.usuarioNombre);
-        setApellido(item.usuarioApellido);
-        setCi(item.usuarioCI.toString());
-        setModalVisible(!modalVisible);
-      }
-    });
-    let auxVehiculos = [];
-    vehiculos.map(item => {
-      if (item.usuarioCI == auxCi){
-        auxVehiculos.push(item);
-      }
-    });
-    setListaVehiculos(auxVehiculos);
-  }
+  useEffect(() => {
+    TraigoUsuariosLista();
+    TraigoUsuarios();
+    TraigoVehiculos();
+    setModalVisible(true);    
+  }, [recibo]);
 
   return (
     <SafeAreaView style={styles.container}>
-    <View style={styles.viewContainer}>
-      <View style={styles.generalView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            navigation.navigate('Usuarios');
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-          <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Usuario</Text>
-          <SelectDropdown
-              style={styles.selectDropdown}
-              data={listaUsuarios}
-              //defaultValueByIndex={1}
-              // defaultValue={'Egypt'}
-              onSelect={(selectedItem) => {
-                setUsuario(selectedItem);
+      <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
+        <View style={styles.viewContainer}>
+          <View style={styles.generalView}>
+            <KeyboardAvoidingView behavior="padding" enabled>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                navigation.navigate('Usuarios');
+                setModalVisible(!modalVisible);
               }}
-              defaultButtonText={'Usuario'}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem;
-              }}
-              rowTextForSelection={(item, index) => {
-                return item;
-              }}
-              buttonStyle={styles.dropdown1BtnStyle}
-              buttonTextStyle={styles.dropdown1BtnTxtStyle}
-              renderDropdownIcon={isOpened => {
-                return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-              }}
-              dropdownIconPosition={'right'}
-              dropdownStyle={styles.dropdown1DropdownStyle}
-              rowStyle={styles.dropdown1RowStyle}
-              rowTextStyle={styles.dropdown1RowTxtStyle}
-              selectedRowStyle={styles.dropdown1SelectedRowStyle}
-              search
-              searchInputStyle={styles.dropdown1searchInputStyleStyle}
-              searchPlaceHolder={'Buscar aqui...'}
-              searchPlaceHolderColor={'darkgrey'}
-              renderSearchInputLeftIcon={() => {
-                return <FontAwesome name={'search'} color={'#444'} size={18} />;
-              }}
+            >
+              <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+              <View style={styles.unaLinea}>
+              <Text style={styles.texto}>Usuario</Text>
+              <SelectDropdown
+                  style={styles.selectDropdown}
+                  data={listaUsuarios}
+                  //defaultValueByIndex={1}
+                  // defaultValue={'Egypt'}
+                  onSelect={(selectedItem) => {
+                    setUsuario(selectedItem);
+                  }}
+                  defaultButtonText={'Usuario'}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown1BtnStyle}
+                  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                  renderDropdownIcon={isOpened => {
+                    return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                  }}
+                  dropdownIconPosition={'right'}
+                  dropdownStyle={styles.dropdown1DropdownStyle}
+                  rowStyle={styles.dropdown1RowStyle}
+                  rowTextStyle={styles.dropdown1RowTxtStyle}
+                  selectedRowStyle={styles.dropdown1SelectedRowStyle}
+                  search
+                  searchInputStyle={styles.dropdown1searchInputStyleStyle}
+                  searchPlaceHolder={'Buscar aqui...'}
+                  searchPlaceHolderColor={'darkgrey'}
+                  renderSearchInputLeftIcon={() => {
+                    return <FontAwesome name={'search'} color={'#444'} size={18} />;
+                  }}
+                />
+            </View>
+            <CtcBoton 
+                style={styles.button}
+                title="Cargar"
+                btnColor="#FF0000"
+                customPress={() => CargoUsuario(usuario)}
+              />
+              </View>
+            </View>
+            </Modal>
+            <View style={styles.unaLinea}>
+              <Text style={styles.texto}>Nombre</Text>
+              <CtcInputText 
+                style={styles.input}
+                placeholder="Nombre"
+                value={nombre}
+                onChangeText={(text) => setNombre(text)}    
+              />
+            </View>
+            <View style={styles.unaLinea}>
+              <Text style={styles.texto}>Apellido</Text>
+              <CtcInputText 
+                style={styles.input}
+                placeholder="Apellido"
+                value={apellido}
+                onChangeText={(text) => setApellido(text)}    
+              />
+            </View>
+            <View style={styles.unaLinea}>
+              <Text style={styles.texto}>CI</Text>
+              <CtcInputText 
+                style={styles.input}
+                editable={false}
+                placeholder="CI"
+                value={ci}
+                onChangeText={(text) => setCi(text)}    
+              />
+            </View>
+            <View style={styles.unaLinea}>
+              <CtcBoton 
+                style={styles.button}
+                title="Modificar"
+                btnColor="#FF0000"
+                customPress={() => ModificarUsuario(nombre, apellido, ci)}
+              />
+              <CtcBoton 
+                style={styles.button}
+                title="Eliminar"
+                btnColor="#FF0000"
+                customPress={() => EliminoUsuario()}
+              />
+            </View>
+            <FlatList
+              contentContainerStyle={{ paddingHorizontal: 20 }}
+              data={listaVehiculos}
+              renderItem={({ item }) => listarVehiculos(item)}
             />
-        </View>
-        <CtcBoton 
-            style={styles.button}
-            title="Cargar"
-            btnColor="#FF0000"
-            customPress={() => CargoUsuario(usuario)}
-          />
+            <CtcBoton 
+              style={styles.button2}
+              title="Agregar Vehículos"
+              btnColor="#FF0000"
+              customPress={() => navigation.navigate("AgregarVehiculo", usuario)}
+            />
+            </KeyboardAvoidingView>
           </View>
         </View>
-        </Modal>
-        <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Nombre</Text>
-          <CtcInputText 
-            style={styles.input}
-            placeholder="Nombre"
-            value={nombre}
-            onChangeText={(text) => setNombre(text)}    
-          />
-        </View>
-        <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Apellido</Text>
-          <CtcInputText 
-            style={styles.input}
-            placeholder="Apellido"
-            value={apellido}
-            onChangeText={(text) => setApellido(text)}    
-          />
-        </View>
-        <View style={styles.unaLinea}>
-          <Text style={styles.texto}>CI</Text>
-          <CtcInputText 
-            style={styles.input}
-            editable={false}
-            placeholder="CI"
-            value={ci}
-            onChangeText={(text) => setCi(text)}    
-          />
-        </View>
-        <View style={styles.unaLinea}>
-          <CtcBoton 
-            style={styles.button}
-            title="Modificar"
-            btnColor="#FF0000"
-            customPress={() => ModificarUsuario(nombre, apellido, ci)}
-          />
-          <CtcBoton 
-            style={styles.button}
-            title="Eliminar"
-            btnColor="#FF0000"
-            customPress={() => EliminoUsuario()}
-          />
-        </View>
-        <FlatList
-          contentContainerStyle={{ paddingHorizontal: 20 }}
-          data={listaVehiculos}
-          renderItem={({ item }) => listarVehiculos(item)}
-        />
-        <CtcBoton 
-          style={styles.button2}
-          title="Agregar Vehículos"
-          btnColor="#FF0000"
-          customPress={() => navigation.navigate("AgregarVehiculo", usuario)}
-        />
-      </View>
-    </View>
-</SafeAreaView>
+      </ImageBackground>
+    </SafeAreaView>
   )
 }
 
@@ -298,5 +322,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5
+  },
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
   },
 })

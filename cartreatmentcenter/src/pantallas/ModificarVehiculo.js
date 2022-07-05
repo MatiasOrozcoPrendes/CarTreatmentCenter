@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, ImageBackground  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 
@@ -11,6 +11,7 @@ const ModificarVehiculo = () => {
   const [serial, setSerial] = useState('');
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
         <View style={styles.viewContainer}>
           <View style={styles.generalView}>
             <View style={styles.unaLinea}>
@@ -53,6 +54,7 @@ const ModificarVehiculo = () => {
             />
           </View>
         </View>
+      </ImageBackground>
     </SafeAreaView>
   )
 }
@@ -93,5 +95,9 @@ const styles = StyleSheet.create({
   button: {
     width: 200, 
     height: 80,
+  },
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
   },
 })

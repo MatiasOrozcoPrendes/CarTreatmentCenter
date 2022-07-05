@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, Modal } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, Modal, ImageBackground  } from 'react-native'
 import CtcCartaTratamiento from '../componentes/CtcCartaTratamiento';
 import CtcInputText from '../componentes/CtcInputText';
 import CtcBoton from '../componentes/CtcBoton';
@@ -102,88 +102,89 @@ const BuscarTratamiento = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-    <View style={styles.viewContainer}>
-      <View style={styles.generalView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-          <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Usuario</Text>
-          <SelectDropdown
-              style={styles.selectDropdown}
-              data={listaUsuarios}
-              //defaultValueByIndex={1}
-              // defaultValue={'Egypt'}
-              onSelect={(selectedItem) => {
-                setUsuario(selectedItem);
+      <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
+        <View style={styles.viewContainer}>
+          <View style={styles.generalView}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
               }}
-              defaultButtonText={'Usuario'}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem;
-              }}
-              rowTextForSelection={(item, index) => {
-                return item;
-              }}
-              buttonStyle={styles.dropdown1BtnStyle}
-              buttonTextStyle={styles.dropdown1BtnTxtStyle}
-              renderDropdownIcon={isOpened => {
-                return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-              }}
-              dropdownIconPosition={'right'}
-              dropdownStyle={styles.dropdown1DropdownStyle}
-              rowStyle={styles.dropdown1RowStyle}
-              rowTextStyle={styles.dropdown1RowTxtStyle}
-              selectedRowStyle={styles.dropdown1SelectedRowStyle}
-              search
-              searchInputStyle={styles.dropdown1searchInputStyleStyle}
-              searchPlaceHolder={'Buscar aqui...'}
-              searchPlaceHolderColor={'darkgrey'}
-              renderSearchInputLeftIcon={() => {
-                return <FontAwesome name={'search'} color={'#444'} size={18} />;
-              }}
+            >
+              <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+              <View style={styles.unaLinea}>
+              <Text style={styles.texto}>Usuario</Text>
+              <SelectDropdown
+                  style={styles.selectDropdown}
+                  data={listaUsuarios}
+                  //defaultValueByIndex={1}
+                  // defaultValue={'Egypt'}
+                  onSelect={(selectedItem) => {
+                    setUsuario(selectedItem);
+                  }}
+                  defaultButtonText={'Usuario'}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown1BtnStyle}
+                  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                  renderDropdownIcon={isOpened => {
+                    return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                  }}
+                  dropdownIconPosition={'right'}
+                  dropdownStyle={styles.dropdown1DropdownStyle}
+                  rowStyle={styles.dropdown1RowStyle}
+                  rowTextStyle={styles.dropdown1RowTxtStyle}
+                  selectedRowStyle={styles.dropdown1SelectedRowStyle}
+                  search
+                  searchInputStyle={styles.dropdown1searchInputStyleStyle}
+                  searchPlaceHolder={'Buscar aqui...'}
+                  searchPlaceHolderColor={'darkgrey'}
+                  renderSearchInputLeftIcon={() => {
+                    return <FontAwesome name={'search'} color={'#444'} size={18} />;
+                  }}
+                />
+            </View>
+            <CtcBoton 
+                style={styles.button}
+                title="Cargar"
+                btnColor="#FF0000"
+                customPress={() => TraigoVehiculos()}
+              />
+              </View>
+            </View>
+            </Modal>
+            <View style={styles.unaLinea}>
+              <Text style={styles.texto}>Vehiculo</Text>
+              <SelectDropdown
+                data={vehiculos}
+                onSelect={(selectedItem, index) => {
+                  setVehiculo(selectedItem);  
+                }}
+              />
+            </View>
+            <CtcBoton
+              style={styles.button}
+              title="Cargar"
+              btnColor="#FF0000"
+              customPress={() => CargoTratamientos()}
             />
-        </View>
-        <CtcBoton 
-            style={styles.button}
-            title="Cargar"
-            btnColor="#FF0000"
-            customPress={() => TraigoVehiculos()}
-          />
+            <Text style={styles.texto}>Tratamientos Terminados</Text>
+            <FlatList
+              contentContainerStyle={{ paddingHorizontal: 20 }}
+              data={tratamientos}
+              renderItem={({ item }) => listarTratamiento(item)}
+            />
           </View>
         </View>
-        </Modal>
-        <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Vehiculo</Text>
-          <SelectDropdown
-            data={vehiculos}
-            onSelect={(selectedItem, index) => {
-              setVehiculo(selectedItem);  
-            }}
-          />
-        </View>
-        <CtcBoton
-          style={styles.button}
-          title="Cargar"
-          btnColor="#FF0000"
-          customPress={() => CargoTratamientos()}
-        />
-        <Text style={styles.texto}>Tratamientos Terminados</Text>
-        <FlatList
-          contentContainerStyle={{ paddingHorizontal: 20 }}
-          data={tratamientos}
-          renderItem={({ item }) => listarTratamiento(item)}
-        />
-      </View>
-
-    </View>
-</SafeAreaView>
+      </ImageBackground>
+    </SafeAreaView>
   )
 }
 export default BuscarTratamiento
@@ -249,5 +250,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5
+  },
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
   },
 })

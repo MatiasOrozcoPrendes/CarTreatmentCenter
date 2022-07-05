@@ -27,29 +27,27 @@ const RootStack = () => {
                 options={{
                 title: "Car Treatment Center",
                 headerStyle: {
-                    backgroundColor: "#B40404"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
-                    color: 'yellow',
-                    textShadowColor: 'blue',
-                    textShadowOffset: { width: 5, height: 5 },
-                    textShadowRadius: 5,
-                    fontSize: 25,
+                    color: 'black',
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
                 name="Usuarios"
                 component={Usuarios}
+                
                 options={{
                 title: "Usuarios",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -58,12 +56,12 @@ const RootStack = () => {
                 options={{
                 title: "Crear Usuarios",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -72,12 +70,12 @@ const RootStack = () => {
                 options={{
                 title: "Gestionar",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -86,12 +84,12 @@ const RootStack = () => {
                 options={{
                 title: "Vehículos",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -100,12 +98,12 @@ const RootStack = () => {
                 options={{
                 title: "Modificar Vehiculo",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -114,12 +112,12 @@ const RootStack = () => {
                 options={{
                 title: "Tratamiento",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -128,12 +126,12 @@ const RootStack = () => {
                 options={{
                 title: "Tratamiento",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -142,12 +140,12 @@ const RootStack = () => {
                 options={{
                 title: "Buscar Tratamiento",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -156,12 +154,12 @@ const RootStack = () => {
                 options={{
                 title: "Tratamiento",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -170,12 +168,12 @@ const RootStack = () => {
                 options={{
                 title: "Insumos",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             <Stack.Screen
@@ -184,12 +182,12 @@ const RootStack = () => {
                 options={{
                 title: "Repuestos",
                 headerStyle: {
-                    backgroundColor: "#23BAC4"
+                    backgroundColor: "#F2F2F2"
                 },
-                headerTintColor: "#FFFF00",
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                     color: 'black',
-                    fontSize: 25,
+                    fontSize: 15,
                 }
             }}/>
             

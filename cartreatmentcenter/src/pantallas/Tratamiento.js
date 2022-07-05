@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, Modal, FlatList } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, Modal, FlatList, ImageBackground  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaRepuesto from '../componentes/CtcCartaRepuesto'
@@ -129,6 +129,7 @@ const Tratamiento = ( {navigation, route} ) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
         <View style={styles.viewContainer}>
           <View style={styles.generalView}>
           
@@ -200,6 +201,7 @@ const Tratamiento = ( {navigation, route} ) => {
             </View>
           </View>
         </View>
+      </ImageBackground>
     </SafeAreaView>
   )
 }
@@ -241,5 +243,8 @@ const styles = StyleSheet.create({
     width: 200, 
     height: 40,
   },
-  
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
+  },
 })

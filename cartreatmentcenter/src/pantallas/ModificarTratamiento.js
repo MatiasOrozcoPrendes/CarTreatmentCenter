@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, Modal, FlatList } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, Modal, FlatList, ImageBackground  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaRepuesto from '../componentes/CtcCartaRepuesto'
@@ -15,7 +15,7 @@ const db = DatabaseConnection.getConnection();
 
 const ModificarTratamiento = ({ navigation }) => {
   const [tratamientos, setTratamientos] = useState([]);
-  const [usuario, setUsuario] = useState('');
+  const [unTratamiento, setUnTratamiento] = useState();
   const [vehiculo, setVehiculo] = useState('');
   const [tratamiento, setTratamiento] = useState('');
   const [modalVisible, setModalVisible] = useState(true);
@@ -76,9 +76,10 @@ const ModificarTratamiento = ({ navigation }) => {
     setVehiculo(pTratamiento.matricula);
     setManoDeObra(pTratamiento.manoDeObra);
     setTratamientoID(pTratamiento.tratamientoID);
-    setModalVisible(!modalVisible);
+    setModalVisible(false);
     traigoInsumosFiltrados(pTratamiento.tratamientoID);
     traigoRepuestosFiltrados(pTratamiento.tratamientoID);
+    setUnTratamiento(pTratamiento);
   }
   function EliminoTratamiento(){
     if (tratamientoID === ''){
@@ -146,7 +147,7 @@ const ModificarTratamiento = ({ navigation }) => {
       AñadirTratamientoInsumo(tratamientoID, parseInt(insumoID), cantidadInsumo);
       setModal2Visible(!modal2Visible);
       setCantidadInsumo('');
-      TraigoInsumo();
+      CargoTratamiento(unTratamiento);
     }
   }
   function AltaRepuesto(){
@@ -159,15 +160,17 @@ const ModificarTratamiento = ({ navigation }) => {
       AñadirTratamientoRepuesto (tratamientoID, parseInt(repuestoID), cantidadRepuesto);
       setModal3Visible(!modal3Visible);
       setCantidadRepuesto('');
-      TraigoRepuesto();
+      CargoTratamiento(unTratamiento);
     }
   }
   function BajaInsumo(pInsumo){
     EliminarTratamientoInsumo(pInsumo.tratamientoInsumoId);
+    CargoTratamiento(unTratamiento);
     traigoInsumosFiltrados();
   }
   function BajaRepuesto(pRepuesto){
     EliminarTratamientoRepuesto(pRepuesto.tratamientoRepuestoId);
+    CargoTratamiento(unTratamiento);
     traigoRepuestosFiltrados();
   }
   function TraigoInsumo() {
@@ -321,6 +324,7 @@ const ModificarTratamiento = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
         <View style={styles.viewContainer}>
           <View style={styles.generalView}>
             <Modal
@@ -584,6 +588,7 @@ const ModificarTratamiento = ({ navigation }) => {
             
           </View>
         </View>
+      </ImageBackground>  
     </SafeAreaView>
   )
 }
@@ -646,5 +651,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5
+  },
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
   },
 })

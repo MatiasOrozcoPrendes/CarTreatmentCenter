@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, KeyboardAvoidingView, ImageBackground  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import { AñadirVehiculo, ModificarVehiculo, EliminarVehiculo } from '../database/FuncionesABM'
@@ -46,7 +46,7 @@ const AgregarVehiculo = ( {navigation, route} ) => {
     }
     else{
       AñadirVehiculo(matricula, usuario.substring(0,8),  marca, color, serial);
-      navigation.navigate('Usuarios');
+      navigation.navigate('GestionarUsuarios', Math.random());
     }
   }
   function ModVehiculo(){
@@ -55,7 +55,7 @@ const AgregarVehiculo = ( {navigation, route} ) => {
     }
     else{
       ModificarVehiculo(matricula, Number(usuario.substring(0,8)),  marca, color, serial);
-      navigation.navigate('Usuarios');
+      navigation.navigate('GestionarUsuarios', Math.random());
     }
   }
   function ElimVehiculo(){
@@ -64,82 +64,81 @@ const AgregarVehiculo = ( {navigation, route} ) => {
     }
     else{
       EliminarVehiculo(matricula);
-      navigation.navigate('Usuarios');
+      navigation.navigate('GestionarUsuarios', Math.random());
     }
  }
-
-
-
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
         <View style={styles.viewContainer}>
           <View style={styles.generalView}>
-            <Text style={styles.texto}>{usuario}</Text>  
-            <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Matricula</Text>
-              <CtcInputText 
-                style={styles.input}
-                editable={matriculaEditable}
-                value={matricula}
-                placeholder="Matricula"
-                onChangeText={(text) => setMatricula(text)}    
-              />
-            </View>
-            <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Marca</Text>
-              <CtcInputText 
-                style={styles.input}
-                value={marca}
-                placeholder="Marca"
-                onChangeText={(text) => setMarca(text)}    
-              />
-            </View>
-            <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Color</Text>
-              <CtcInputText 
-                style={styles.input}
-                value={color}
-                placeholder="Color"
-                onChangeText={(text) => setColor(text)}    
-              />
-            </View>
-            <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Serial</Text>
-              <CtcInputText 
-                style={styles.input}
-                value={serial}
-                placeholder="Serial"
-                onChangeText={(text) => setSerial(text)}    
-              />
-            </View>
-          </View>
-          <View style={styles.unaLinea}>
-            <CtcBoton 
-              style={styles.button}
-              disabled={agregarDisabled}
-              title="Agregar"
-              btnColor="#FF0000"
-              customPress={() => AltaVehiculo()}
-            />
-            <CtcBoton 
-              style={styles.button}
-              disabled={modificarDisabled}
-              title="Modificar"
-              btnColor="#FF0000"
-              customPress={() => ModVehiculo()}
-            />
-            <CtcBoton 
-              style={styles.button}
-              disabled={eliminarDisabled}
-              title="Eliminar"
-              btnColor="#FF0000"
-              customPress={() => ElimVehiculo()}
-            />
-            
-          </View>
-          
+            <KeyboardAvoidingView behavior="padding">
+              <Text style={styles.texto}>{usuario}</Text>  
+              <View style={styles.unaLinea}>
+                <Text style={styles.texto}>Matricula</Text>
+                <CtcInputText 
+                  style={styles.input}
+                  editable={matriculaEditable}
+                  value={matricula}
+                  autoCapitalize="characters"
+                  placeholder="Matricula"
+                  onChangeText={(text) => setMatricula(text)}    
+                />
+              </View>
+              <View style={styles.unaLinea}>
+                <Text style={styles.texto}>Marca</Text>
+                <CtcInputText 
+                  style={styles.input}
+                  value={marca}
+                  placeholder="Marca"
+                  onChangeText={(text) => setMarca(text)}    
+                />
+              </View>
+              <View style={styles.unaLinea}>
+                <Text style={styles.texto}>Color</Text>
+                <CtcInputText 
+                  style={styles.input}
+                  value={color}
+                  placeholder="Color"
+                  onChangeText={(text) => setColor(text)}    
+                />
+              </View>
+              <View style={styles.unaLinea}>
+                <Text style={styles.texto}>Serial</Text>
+                <CtcInputText 
+                  style={styles.input}
+                  value={serial}
+                  placeholder="Serial"
+                  onChangeText={(text) => setSerial(text)}    
+                />
+              </View>
+              <View style={styles.unaLinea}>
+                <CtcBoton 
+                  style={styles.button}
+                  disabled={agregarDisabled}
+                  title="Agregar"
+                  btnColor="#FF0000"
+                  customPress={() => AltaVehiculo()}
+                />
+                <CtcBoton 
+                  style={styles.button}
+                  disabled={modificarDisabled}
+                  title="Modificar"
+                  btnColor="#FF0000"
+                  customPress={() => ModVehiculo()}
+                />
+                <CtcBoton 
+                  style={styles.button}
+                  disabled={eliminarDisabled}
+                  title="Eliminar"
+                  btnColor="#FF0000"
+                  customPress={() => ElimVehiculo()}
+                />
+              </View>
+            </KeyboardAvoidingView>
+          </View>  
         </View>
-        
+      </ImageBackground>
     </SafeAreaView>
   )
 }
@@ -207,5 +206,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5
+  },
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
   },
 })

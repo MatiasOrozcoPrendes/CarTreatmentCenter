@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, KeyboardAvoidingView, ImageBackground  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
+import CtcEtiqueta from '../componentes/CtcEtiqueta'
 import { AñadirUsuario } from '../database/FuncionesABM'
 
 class CrearUsuarios extends Component{
-
   state = {
     nombre: '',
     apellido: '',
@@ -17,7 +17,6 @@ class CrearUsuarios extends Component{
       [inputName]: inputValue
     }))
   }
-
   AgregarUsuario = () => {
     const { nombre, apellido, ci } = this.state
     if(nombre === '' || apellido === '' || ci === ''){
@@ -35,55 +34,56 @@ class CrearUsuarios extends Component{
           ci: ''
         })
       }
-      
     }
   }
 
   render(){	
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
         <View style={styles.viewContainer}>
-          <View style={styles.generalView}>
-            <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Nombre</Text>
-              <CtcInputText 
-                style={styles.input}
-                placeholder="Nombre"
-                value={this.state.nombre}
-                onChangeText={(value) => this.handleInputChange('nombre', value)}    
-              />
-            </View>
-            <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Apellido</Text>
-              <CtcInputText 
-                style={styles.input}
-                placeholder="Apellido"
-                value={this.state.apellido}
-                onChangeText={(value) => this.handleInputChange('apellido', value)}    
-              />
-            </View>
-            <View style={styles.unaLinea}>
-              <Text style={styles.texto}>CI</Text>
-              <CtcInputText 
-                style={styles.input}
-                placeholder="CI"
-                keyboardType="numeric"
-                maxLength={8}
-                value={this.state.ci}
-                onChangeText={(value) => this.handleInputChange('ci', value)}
+            <KeyboardAvoidingView behavior="padding">
+              <View style={styles.unaLinea}>
+                <CtcEtiqueta texto="Nombre" style={styles.texto}/>
+                <CtcInputText 
+                  style={styles.input}
+                  placeholder="Nombre"
+                  value={this.state.nombre}
+                  onChangeText={(value) => this.handleInputChange('nombre', value)}    
+                />
+              </View>
+              <View style={styles.unaLinea}>
+              <CtcEtiqueta texto="Apellido" />
+                <CtcInputText 
+                  style={styles.input}
+                  placeholder="Apellido"
+                  value={this.state.apellido}
+                  onChangeText={(value) => this.handleInputChange('apellido', value)}    
+                />
+              </View>
+              <View style={styles.unaLinea}>
+              <CtcEtiqueta texto="     CI     " />
+                <CtcInputText 
+                  style={styles.input}
+                  placeholder="CI"
+                  keyboardType="numeric"
+                  maxLength={8}
+                  value={this.state.ci}
+                  onChangeText={(value) => this.handleInputChange('ci', value)}
 
-                
+                  
+                />
+              </View>
+              <CtcBoton 
+                  style={styles.button}
+                  title="Crear"
+                  fontSize={20}
+                  customPress={() => { this.AgregarUsuario() }}
+                    
               />
-            </View>
-            <CtcBoton 
-               style={styles.button}
-               title="Crear"
-               btnColor="#FF0000"
-               customPress={() => { this.AgregarUsuario() }}
-                 //
-            />
-          </View>
+            </KeyboardAvoidingView>
         </View>
+      </ImageBackground> 
     </SafeAreaView>
   )
 }
@@ -99,27 +99,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  generalView: {
-    flex: 1,
-  },
   button: {
-    width: 200, 
-    height: 80,
+    width: 80, 
+    height: 60,
   },
   unaLinea: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   texto: {
-    marginTop: 15,
-    marginLeft: 5,
-    marginRight: 5,
-    marginBottom: 15,
-    fontSize: 20,
-    color: 'black',
+
   },
   input: {
     width: 200, 
     height: 40,
+  },
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
   },
 })

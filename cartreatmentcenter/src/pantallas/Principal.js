@@ -1,7 +1,9 @@
 import React from 'react'
 import { useEffect } from 'react'
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ImageBackground } from 'react-native'
 import CtcBoton from '../componentes/CtcBoton'
+import CtcBotonDerecha from '../componentes/CtcBotonDerecha'
+import CtcBotonIzquierda from '../componentes/CtcBotonIzquierda'
 import { CrearTablaUsuario, CrearTablaVehiculo, CrearTablaTratamiento, CrearTablaInsumos, CrearTablaTratamientoInsumo, CrearTablaRepuestos, CrearTablaTratamientoRepuesto } from '../database/FuncionesABM'
 import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
@@ -44,41 +46,42 @@ const Principal = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.viewContainer}>
-            <View style={styles.generalView}>
-              <CtcBoton 
-                 style={styles.button}
-                 title="Usuarios"
-                 btnColor="#FF0000"
-                 customPress={() => navigation.navigate("Usuarios")}
-              />
-              <CtcBoton 
-                 style={styles.button}
-                 title="Crear Tratamiento"
-                 btnColor="#FF0000"
-                 customPress={() => navigation.navigate("CrearTratamiento")}
-              />
-              <CtcBoton 
-                 style={styles.button}
-                 title="Tratamientos Activos"
-                 btnColor="#FF0000"
-                 customPress={() => navigation.navigate("ModificarTratamiento")}
-              />
-              <CtcBoton 
-                 style={styles.button}
-                 title="Tratamientos Finalizados"
-                 btnColor="#FF0000"
-                 customPress={() => navigation.navigate("BuscarTratamiento")}
-              />
-              <CtcBoton 
-                 style={styles.button}
-                 title="Borrar Base de Datos"
-                 btnColor="#FF0000"
-                 customPress={() => borrarBaseDatos()}
-              />
-             
-            </View>
-      </View>
+      <ImageBackground source={require('../imagenes/Fondo1.jpg')} resizeMode="cover" style={styles.imageBack}>
+        <View style={styles.viewContainer}>
+          <View style={styles.generalView}>
+            <CtcBotonIzquierda
+              style={styles.button}
+              title="Usuarios"
+              fontSize={25}
+              customPress={() => navigation.navigate("Usuarios")}
+            />
+            <CtcBotonDerecha
+              style={styles.button}
+              title="Crear Tratamiento"
+              fontSize={15}
+              customPress={() => navigation.navigate("CrearTratamiento")}
+            />
+            <CtcBotonIzquierda
+              style={styles.button}
+              title="Tratamientos Activos"
+              fontSize={15}
+              customPress={() => navigation.navigate("ModificarTratamiento")}
+            />
+            <CtcBotonDerecha
+              style={styles.button}
+              title="Tratamientos Finalizados"
+              fontSize={15}
+              customPress={() => navigation.navigate("BuscarTratamiento")}
+            />
+            <CtcBoton 
+              style={styles.button}
+              title="Borrar BD"
+              fontSize={20}
+              customPress={() => borrarBaseDatos()}
+            />
+          </View>
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   )
 }
@@ -97,7 +100,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    width: 200, 
-    height: 80,
+    width: 250, 
+    height: 90,
+  },
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
   },
 })

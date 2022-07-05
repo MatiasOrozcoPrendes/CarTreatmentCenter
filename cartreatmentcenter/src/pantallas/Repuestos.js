@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, ImageBackground  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaRepuesto from '../componentes/CtcCartaRepuesto'
@@ -85,58 +85,60 @@ const Repuestos = () => {
     TraigoRepuesto();
   }, []);
 
-  return (
-    <SafeAreaView style={styles.container}>
-    <View style={styles.viewContainer}>
-      <View style={styles.generalView}>
-        <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Nombre</Text>
-          <CtcInputText 
-            style={styles.input}
-            placeholder="Nombre"
-            value={nombre}
-            onChangeText={(text) => setNombre(text)}    
-          />
-        </View>
-        <View style={styles.unaLinea}>
-          <Text style={styles.texto}>Precio</Text>
-          <CtcInputText 
-            style={styles.input}
-            placeholder="Precio"
-            value={precio}
-            keyboardType="numeric"
-            onChangeText={(text) => setPrecio(text)}    
-          />
-        </View>
-        <View style={styles.unaLinea}>
-        <CtcBoton 
-            style={styles.button}
-            title="Agregar"
-            btnColor="#FF0000"
-            customPress={() => AltaRepuesto()}
-          />
+return (
+  <SafeAreaView style={styles.container}>
+    <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
+      <View style={styles.viewContainer}>
+        <View style={styles.generalView}>
+          <View style={styles.unaLinea}>
+            <Text style={styles.texto}>Nombre</Text>
+            <CtcInputText 
+              style={styles.input}
+              placeholder="Nombre"
+              value={nombre}
+              onChangeText={(text) => setNombre(text)}    
+            />
+          </View>
+          <View style={styles.unaLinea}>
+            <Text style={styles.texto}>Precio</Text>
+            <CtcInputText 
+              style={styles.input}
+              placeholder="Precio"
+              value={precio}
+              keyboardType="numeric"
+              onChangeText={(text) => setPrecio(text)}    
+            />
+          </View>
+          <View style={styles.unaLinea}>
           <CtcBoton 
-            style={styles.button}
-            title="Modificar"
-            btnColor="#FF0000"
-            customPress={() => ModRepuesto()}
-          />
-          <CtcBoton 
-            style={styles.button}
-            title="Eliminar"
-            btnColor="#FF0000"
-            customPress={() => BajaRepuesto()}
+              style={styles.button}
+              title="Agregar"
+              btnColor="#FF0000"
+              customPress={() => AltaRepuesto()}
+            />
+            <CtcBoton 
+              style={styles.button}
+              title="Modificar"
+              btnColor="#FF0000"
+              customPress={() => ModRepuesto()}
+            />
+            <CtcBoton 
+              style={styles.button}
+              title="Eliminar"
+              btnColor="#FF0000"
+              customPress={() => BajaRepuesto()}
+            />
+          </View>
+          <FlatList
+            contentContainerStyle={{ paddingHorizontal: 20 }}
+            data={repuestos}
+            renderItem={({ item }) => listarRepuestos(item)}
           />
         </View>
-        <FlatList
-          contentContainerStyle={{ paddingHorizontal: 20 }}
-          data={repuestos}
-          renderItem={({ item }) => listarRepuestos(item)}
-        />
       </View>
-    </View>
-</SafeAreaView>
-  )
+    </ImageBackground>
+  </SafeAreaView>
+)
 }
 export default Repuestos
 
@@ -201,5 +203,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5
+  },
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
   },
 })

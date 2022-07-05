@@ -1,27 +1,32 @@
 import React from 'react'
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ImageBackground  } from 'react-native'
 import CtcBoton from '../componentes/CtcBoton'
+import CtcBotonDerecha from '../componentes/CtcBotonDerecha'
+import CtcBotonIzquierda from '../componentes/CtcBotonIzquierda'
 
 const Usuarios = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
         <View style={styles.viewContainer}>
           <View style={styles.generalView}>
-            <CtcBoton 
+            <CtcBotonIzquierda
                style={styles.button}
                title="Crear Usuario"
-               btnColor="#FF0000"
+                fontSize={25}
                customPress={() => navigation.navigate("CrearUsuarios")}
             />
-            <CtcBoton 
+            <CtcBotonDerecha 
                style={styles.button}
                title="Gestion"
-               btnColor="#FF0000"
-               customPress={() => navigation.navigate("GestionarUsuarios")}
+               fontSize={25}
+               customPress={() => navigation.navigate("GestionarUsuarios", "Usuarios")}
             />
           </View>
-    </View>
-  </SafeAreaView>
+        </View>
+      </ImageBackground>
+
+    </SafeAreaView>
   )
 }
 
@@ -39,7 +44,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    width: 200, 
+    width: 220, 
     height: 80,
+  },
+  imageBack: {
+    flex: 1,
+    justifyContent: "center"
   },
 })
