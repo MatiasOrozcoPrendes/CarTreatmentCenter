@@ -2,31 +2,33 @@ import React from 'react'
 import { useState, useEffect} from "react";
 import { StyleSheet, Text, View, SafeAreaView, Alert, Modal, FlatList, ImageBackground  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
-import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaRepuesto from '../componentes/CtcCartaRepuesto'
 import CtcCartaInsumo from '../componentes/CtcCartaInsumo'
+import CtcEtiqueta from '../componentes/CtcEtiqueta'
 import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
 
 const Tratamiento = ( {navigation, route} ) => {
   const Recibo = route.params;
-  const [vehiculo, setVehiculo] = useState('');
-  const [tratamiento, setTratamiento] = useState('');
-  const [fechaIni, setFechaIni] = useState('');
-  const [fechaFin, setFechaFin] = useState('');
-  const [manoDeObra, setManoDeObra] = useState('');
-  const [costo, setCosto] = useState('');
-  const [tratamientoID, setTratamientoID] = useState('');
+  const [entrada, setEntrada] = useState(Recibo.aux);
+  const [todosInsumos, setTodosInsumos] = useState(traigoInsumos());
+  const [todosRepuestos, setTodosRepuestos] = useState(traigoRepuestos());
+  const [vehiculo, setVehiculo] = useState(Recibo.matricula);
+  const [tratamiento, setTratamiento] = useState(Recibo.tratamiento);
+  const [fechaIni, setFechaIni] = useState(Recibo.fechaInicioTratamiento);
+  const [fechaFin, setFechaFin] = useState(Recibo.fechaFinalTratamiento);
+  const [manoDeObra, setManoDeObra] = useState(Recibo.manoDeObra);
+  const [costo, setCosto] = useState(Recibo.costo);
+  const [tratamientoID, setTratamientoID] = useState(Recibo.tratamientoID);
   const [insumos, setInsumos] = useState([]);
   const [repuestos, setRepuestos] = useState([]);
+  const [auxiliar, setAuxiliar] = useState(1);
   const listarInsumos = (item) => {
     return (
       <View >
         <CtcCartaInsumo 
             style={styles.carta}
             texto={item.cantidad + " - " + item.insumo}
-            btnColor="#A9BCF5"
-            customPress={() => setVehiculo(item)}
           />
       </View>
     );
@@ -35,14 +37,52 @@ const Tratamiento = ( {navigation, route} ) => {
     return (
       <View >
         <CtcCartaRepuesto 
-            style={styles.carta}
-            texto={item.cantidad + " - " + item.repuesto} 
-            btnColor="#A9BCF5"
-            customPress={() => setVehiculo(item)}
-          />
+          style={styles.carta}
+          texto={item.cantidad + " - " + item.repuesto} 
+        />
       </View>
     );
   };
+  function traigoInsumos() {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM insumos', [], (tx, results) => {
+        var len = results.rows.length;
+        var insumos = [];
+        var insumo
+        for (let i = 0; i < len; i++) {
+          let row = results.rows.item(i);
+          insumo = {
+            insumoId : row.insumoId,
+            insumoNombre : row.insumoNombre,
+            insumoPrecio : row.insumoPrecio,
+          }
+          insumos.push(insumo);
+        }
+        setTodosInsumos(insumos);
+        return insumos;
+      });
+    });
+  }
+  function traigoRepuestos() {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM repuestos', [], (tx, results) => {
+        var len = results.rows.length;
+        var repuestos = [];
+        var repuesto
+        for (let i = 0; i < len; i++) {
+          let row = results.rows.item(i);
+          repuesto = {
+            repuestoId : row.repuestoId,
+            repuestoNombre : row.repuestoNombre,
+            repuestoPrecio : row.repuestoPrecio,
+          }
+          repuestos.push(repuesto);
+        }
+        setTodosRepuestos(repuestos);
+        return repuestos;
+      });
+    });
+  }
   function traigoInsumosFiltrados(){
     let auxTratamientoInsumos = [];
         db.transaction((tx) => {
@@ -92,40 +132,44 @@ const Tratamiento = ( {navigation, route} ) => {
         });
   }
   function DoyNombreInsumo(id){
-    let nombre = "-";
-    db.transaction((tx) => {
-      tx.executeSql(`SELECT * FROM insumos WHERE insumoId = ${id}`, [], (tx, results) => {
-        if (results.rows.length > 0) {
-          nombre = results.rows.item(0).insumoNombre;
-          return nombre;
-          
-        }
-      });
-    });
+    let auxInsumo
+    todosInsumos.map((unInsumo) => {
+      let texto = unInsumo.insumoNombre;
+      let arrayDeCadenas = texto.split(" ");
+      let nombre = arrayDeCadenas[0];
+      if (unInsumo.insumoId == id){
+        auxInsumo = nombre;
+      }
+    })
+    return auxInsumo;
   }
   function DoyNombreRepuesto(id){
-    let nombre = "";
-    db.transaction((tx) => {
-      tx.executeSql(`SELECT * FROM repuestos WHERE repuestoId = ${id}`, [], (tx, results) => {
-        if (results.rows.length > 0) {
-          nombre = results.rows.item(0).repuestoNombre;
-          return nombre;
-        }
-      });
-    });
-    
+    let auxRepuesto
+    todosRepuestos.map((unRepuesto) => {
+      let texto = unRepuesto.repuestoNombre;
+      let arrayDeCadenas = texto.split(" ");
+      let nombre = arrayDeCadenas[0];
+      if(unRepuesto.repuestoId == id){
+        auxRepuesto = nombre;
+      }
+    }
+    )
+    return auxRepuesto;
+  }
+  function CambioAuxiliar(){
+    setAuxiliar(Math.random());
   }
   useEffect(() => {
-    setVehiculo(Recibo.matricula);
-    setTratamiento(Recibo.tratamiento);
-    setFechaIni(Recibo.fechaInicioTratamiento);
-    setFechaFin(Recibo.fechaFinalTratamiento);
-    setManoDeObra(Recibo.manoDeObra);
-    setCosto(Recibo.costo);
-    setTratamientoID(Recibo.tratamientoID);
-    traigoInsumosFiltrados();
-    traigoRepuestosFiltrados();
-  }, [])
+    let identificadorTiempoDeEspera;
+    identificadorTiempoDeEspera = setTimeout(CambioAuxiliar, 1000);
+  }, [entrada])
+  
+  useEffect(() => {
+    if (auxiliar != 1){
+      traigoInsumosFiltrados();
+      traigoRepuestosFiltrados();
+    }
+  }, [auxiliar])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -134,7 +178,7 @@ const Tratamiento = ( {navigation, route} ) => {
           <View style={styles.generalView}>
           
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Vehículo</Text>
+              <CtcEtiqueta texto="Vehículo" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Vehiculo"
@@ -143,7 +187,7 @@ const Tratamiento = ( {navigation, route} ) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Tratamiento</Text>
+              <CtcEtiqueta texto="Tratamiento" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Tratamiento"
@@ -152,7 +196,7 @@ const Tratamiento = ( {navigation, route} ) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Fecha Inicio</Text>
+              <CtcEtiqueta texto="Fecha Inicio" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Fecha Inicio"
@@ -161,7 +205,7 @@ const Tratamiento = ( {navigation, route} ) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Fecha Fin</Text>
+              <CtcEtiqueta texto="Fecha Fin" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Fecha Fin"
@@ -170,7 +214,7 @@ const Tratamiento = ( {navigation, route} ) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Mano De Obra</Text>
+              <CtcEtiqueta texto="Mano De Obra" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Mano De Obra"
@@ -179,7 +223,7 @@ const Tratamiento = ( {navigation, route} ) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Costo Final</Text>
+              <CtcEtiqueta texto="Costo Final" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Costo Final"
@@ -187,6 +231,14 @@ const Tratamiento = ( {navigation, route} ) => {
                 onChangeText={(text) => setManoDeObra(text)}    
               />
             </View>
+            <View
+              style={{
+              borderBottomColor: 'gray',
+              borderBottomWidth: 3,
+              marginTop: 10,
+              marginBottom: 10,
+              }}
+            />
             <View style={styles.unaLinea}>
                 <FlatList
                   contentContainerStyle={{ paddingHorizontal: 20 }}
@@ -246,5 +298,8 @@ const styles = StyleSheet.create({
   imageBack: {
     flex: 1,
     justifyContent: "center"
+  },
+  etiqueta: {
+    width: 110,
   },
 })

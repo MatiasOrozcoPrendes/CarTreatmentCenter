@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native'
 import React from 'react'
 
 const CtcCartaVehiculo = (props) => {
   return (
-    <TouchableOpacity style={[styles.button, props.style, {backgroundColor: props.btnColor}]} onPress={props.customPress}>
-        <View style={styles.view}>
-            <Text style={styles.text}>{props.texto}</Text>
-        </View>
-    </TouchableOpacity>
+    <ImageBackground source={require('../imagenes/Patente.png')} resizeMode="stretch">
+      <TouchableOpacity style={[styles.button, props.style]} onPress={props.customPress}>
+          <View style={styles.view}>
+              <Text style={styles.text}>{props.texto}</Text>
+          </View>
+      </TouchableOpacity>
+    </ImageBackground>
   )
 }
 
@@ -29,8 +31,9 @@ const styles = StyleSheet.create({
       },
       text: {
         fontSize: 20,
-        color: 'yellow',
-        textShadowColor: 'blue',
+        color: 'black',
+        textShadowColor: '#D8D8D8',
+        fontWeight: 'bold',
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 5,
       },

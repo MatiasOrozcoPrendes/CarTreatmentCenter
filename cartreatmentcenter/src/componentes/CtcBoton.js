@@ -3,14 +3,12 @@ import React from 'react'
 
 const CtcBoton = (props) => {
   return (
-    <ImageBackground source={require('../imagenes/Botones.png')} resizeMode="cover">
+    <ImageBackground source={require('../imagenes/Botones.png')} resizeMode="stretch">
       <TouchableOpacity 
       style={[styles.button, props.style]} 
       disabled={props.disabled}
       onPress={props.customPress}>
-          <View style={styles.view}>
-          <Text style={[styles.text, {fontSize: props.fontSize}]}>{props.title}</Text>
-          </View>
+        <Text style={[styles.text, {fontSize: props.fontSize}]}>{props.title}</Text>
       </TouchableOpacity>
     </ImageBackground>
   )
@@ -19,11 +17,6 @@ const CtcBoton = (props) => {
 export default CtcBoton
 
 const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 button: {
   justifyContent: 'center',
   alignItems: 'center',
@@ -39,9 +32,6 @@ button: {
 },
 text: {
   fontWeight: 'bold',
-  color: 'black',
-  textShadowColor: '#fff',
-  textShadowOffset: { width: 2, height: 2 },
-  textShadowRadius: 5,
+  color: 'white',
 },
 })

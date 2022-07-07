@@ -3,8 +3,8 @@ import React from 'react'
 
 const CtcEtiqueta = (props) => {
   return (
-    <ImageBackground source={require('../imagenes/Etiquetas.png')} resizeMode="cover" style={styles.imageBack}>
-        <View style={[styles.button, props.style]}  >
+    <ImageBackground source={require('../imagenes/Etiquetas.png')} resizeMode="stretch" style={styles.imageBack}>
+        <View style={[styles.view, props.style]}  >
         <Text style={styles.texto}>{props.texto}</Text>
         </View>
     </ImageBackground>
@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-
     },
     texto: {
         marginTop: 15,

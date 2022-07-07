@@ -3,6 +3,7 @@ import { useState, useEffect} from "react";
 import { StyleSheet, Text, View, SafeAreaView, Alert, KeyboardAvoidingView, ImageBackground  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
+import CtcEtiqueta from '../componentes/CtcEtiqueta';
 import { AñadirVehiculo, ModificarVehiculo, EliminarVehiculo } from '../database/FuncionesABM'
 import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
@@ -29,7 +30,6 @@ const AgregarVehiculo = ( {navigation, route} ) => {
       CargoVehiculo(Recibo);
       setModificarDisabled(false);
       setEliminarDisabled(false);
-
     }
   }, []);
 
@@ -72,10 +72,10 @@ const AgregarVehiculo = ( {navigation, route} ) => {
       <ImageBackground source={require('../imagenes/Fondo2.jpg')} resizeMode="cover" style={styles.imageBack}>
         <View style={styles.viewContainer}>
           <View style={styles.generalView}>
-            <KeyboardAvoidingView behavior="padding">
-              <Text style={styles.texto}>{usuario}</Text>  
+            <KeyboardAvoidingView behavior="padding" >
+              <Text style={styles.texto}>{usuario}</Text>
               <View style={styles.unaLinea}>
-                <Text style={styles.texto}>Matricula</Text>
+                <CtcEtiqueta texto="Matricula" style={styles.etiqueta}/>
                 <CtcInputText 
                   style={styles.input}
                   editable={matriculaEditable}
@@ -86,7 +86,7 @@ const AgregarVehiculo = ( {navigation, route} ) => {
                 />
               </View>
               <View style={styles.unaLinea}>
-                <Text style={styles.texto}>Marca</Text>
+                <CtcEtiqueta texto="Marca" style={styles.etiqueta}/>
                 <CtcInputText 
                   style={styles.input}
                   value={marca}
@@ -95,7 +95,7 @@ const AgregarVehiculo = ( {navigation, route} ) => {
                 />
               </View>
               <View style={styles.unaLinea}>
-                <Text style={styles.texto}>Color</Text>
+                <CtcEtiqueta texto="Color" style={styles.etiqueta}/>
                 <CtcInputText 
                   style={styles.input}
                   value={color}
@@ -104,7 +104,7 @@ const AgregarVehiculo = ( {navigation, route} ) => {
                 />
               </View>
               <View style={styles.unaLinea}>
-                <Text style={styles.texto}>Serial</Text>
+                <CtcEtiqueta texto="Serial" style={styles.etiqueta}/>
                 <CtcInputText 
                   style={styles.input}
                   value={serial}
@@ -112,6 +112,7 @@ const AgregarVehiculo = ( {navigation, route} ) => {
                   onChangeText={(text) => setSerial(text)}    
                 />
               </View>
+              
               <View style={styles.unaLinea}>
                 <CtcBoton 
                   style={styles.button}
@@ -152,6 +153,7 @@ const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
     alignItems: 'center',
+    top: 20,
   },
   generalView: {
     flex: 1,
@@ -166,7 +168,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginBottom: 15,
     fontSize: 20,
-    color: 'black',
+    fontWeight: 'bold',
+    color: 'white',
   },
   input: {
     width: 200, 
@@ -206,6 +209,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5
+  },
+  etiqueta: {
+    width: 100,
   },
   imageBack: {
     flex: 1,

@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, Modal, KeyboardA
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaVehiculo from '../componentes/CtcCartaVehiculo';
+import CtcEtiqueta from '../componentes/CtcEtiqueta'
 import SelectDropdown from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { ModificarUsuario, EliminarUsuario } from '../database/FuncionesABM'
@@ -29,7 +30,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
         <CtcCartaVehiculo 
             style={styles.carta}
             texto={item.matricula}
-            btnColor="#A9BCF5"
+            btnColor="#E6E0F8"
             customPress={() => navigation.navigate("AgregarVehiculo", item)}
           />
       </View>
@@ -149,13 +150,8 @@ const GestionarUsuarios = ({ navigation, route }) => {
             >
               <View style={styles.centeredView}>
               <View style={styles.modalView}>
-              <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Usuario</Text>
               <SelectDropdown
-                  style={styles.selectDropdown}
                   data={listaUsuarios}
-                  //defaultValueByIndex={1}
-                  // defaultValue={'Egypt'}
                   onSelect={(selectedItem) => {
                     setUsuario(selectedItem);
                   }}
@@ -166,36 +162,27 @@ const GestionarUsuarios = ({ navigation, route }) => {
                   rowTextForSelection={(item, index) => {
                     return item;
                   }}
-                  buttonStyle={styles.dropdown1BtnStyle}
-                  buttonTextStyle={styles.dropdown1BtnTxtStyle}
                   renderDropdownIcon={isOpened => {
                     return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
                   }}
                   dropdownIconPosition={'right'}
-                  dropdownStyle={styles.dropdown1DropdownStyle}
-                  rowStyle={styles.dropdown1RowStyle}
-                  rowTextStyle={styles.dropdown1RowTxtStyle}
-                  selectedRowStyle={styles.dropdown1SelectedRowStyle}
                   search
-                  searchInputStyle={styles.dropdown1searchInputStyleStyle}
                   searchPlaceHolder={'Buscar aqui...'}
                   searchPlaceHolderColor={'darkgrey'}
                   renderSearchInputLeftIcon={() => {
                     return <FontAwesome name={'search'} color={'#444'} size={18} />;
                   }}
                 />
-            </View>
             <CtcBoton 
                 style={styles.button}
                 title="Cargar"
-                btnColor="#FF0000"
                 customPress={() => CargoUsuario(usuario)}
               />
               </View>
             </View>
             </Modal>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Nombre</Text>
+              <CtcEtiqueta texto="Nombre" />
               <CtcInputText 
                 style={styles.input}
                 placeholder="Nombre"
@@ -204,7 +191,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Apellido</Text>
+              <CtcEtiqueta texto="Apellido" />
               <CtcInputText 
                 style={styles.input}
                 placeholder="Apellido"
@@ -213,7 +200,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>CI</Text>
+              <CtcEtiqueta texto="     CI     " />
               <CtcInputText 
                 style={styles.input}
                 editable={false}
@@ -222,6 +209,14 @@ const GestionarUsuarios = ({ navigation, route }) => {
                 onChangeText={(text) => setCi(text)}    
               />
             </View>
+              <View
+                style={{
+                borderBottomColor: 'gray',
+                borderBottomWidth: 3,
+                marginTop: 5,
+                marginBottom: 5,
+                }}
+              />
             <View style={styles.unaLinea}>
               <CtcBoton 
                 style={styles.button}
@@ -236,17 +231,27 @@ const GestionarUsuarios = ({ navigation, route }) => {
                 customPress={() => EliminoUsuario()}
               />
             </View>
+              <View
+                style={{
+                borderBottomColor: 'gray',
+                borderBottomWidth: 3,
+                marginTop: 5,
+                marginBottom: 5,
+                }}
+              />
             <FlatList
               contentContainerStyle={{ paddingHorizontal: 20 }}
               data={listaVehiculos}
               renderItem={({ item }) => listarVehiculos(item)}
             />
-            <CtcBoton 
-              style={styles.button2}
-              title="Agregar Vehículos"
-              btnColor="#FF0000"
-              customPress={() => navigation.navigate("AgregarVehiculo", usuario)}
-            />
+            <View style={[{justifyContent: 'center'}, {alignItems: 'center'} ]}>
+              <CtcBoton 
+                style={styles.button2}
+                title="Agregar Vehículos"
+                btnColor="#FF0000"
+                customPress={() => navigation.navigate("AgregarVehiculo", usuario)}
+              />
+            </View>
             </KeyboardAvoidingView>
           </View>
         </View>
@@ -286,7 +291,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 100, 
-    height: 80,
+    height: 60,
   },
   button2: {
     width: 200, 
@@ -294,7 +299,7 @@ const styles = StyleSheet.create({
   },
   carta:{
     width: 250, 
-    height: 50,
+    height: 70,
   },
   listItemView: {
     margin: 5,
@@ -327,4 +332,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center"
   },
+
 })

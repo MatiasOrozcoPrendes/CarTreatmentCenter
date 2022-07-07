@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect} from "react";
 import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, Modal, ImageBackground  } from 'react-native'
 import CtcCartaTratamiento from '../componentes/CtcCartaTratamiento';
-import CtcInputText from '../componentes/CtcInputText';
+import CtcEtiqueta from '../componentes/CtcEtiqueta'
 import CtcBoton from '../componentes/CtcBoton';
 import SelectDropdown from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -23,12 +23,17 @@ const BuscarTratamiento = ({ navigation }) => {
         <CtcCartaTratamiento 
           style={styles.carta}
           texto={item.fechaFinalTratamiento +" - "+ item.tratamiento}
-          btnColor="#A9BCF5"
-          customPress={() => navigation.navigate("Tratamiento", item)}
+          customPress={() => LlamoTratamiento(item)}
         />
       </View>
     );
   };
+  function LlamoTratamiento(item) {
+    let Aux = item
+    let random = Math.random();
+    Aux.aux = random;
+    navigation.navigate("Tratamiento", item);
+  }
   function TraigoListaUsuarios() {
     db.transaction((tx) => {
       tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
@@ -116,7 +121,6 @@ const BuscarTratamiento = ({ navigation }) => {
               <View style={styles.centeredView}>
               <View style={styles.modalView}>
               <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Usuario</Text>
               <SelectDropdown
                   style={styles.selectDropdown}
                   data={listaUsuarios}
@@ -160,27 +164,55 @@ const BuscarTratamiento = ({ navigation }) => {
               </View>
             </View>
             </Modal>
+            <View
+              style={{
+              marginTop: 10,
+              marginBottom: 10,
+              }}
+            />
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Vehiculo</Text>
+              <CtcEtiqueta texto="Vehiculo" style={styles.etiqueta}/>
               <SelectDropdown
+                defaultButtonText={'Matricula'}
                 data={vehiculos}
                 onSelect={(selectedItem, index) => {
                   setVehiculo(selectedItem);  
                 }}
+                buttonStyle={styles.selectDropdown}
               />
             </View>
+            <View
+              style={{
+              borderBottomColor: 'gray',
+              borderBottomWidth: 3,
+              marginTop: 5,
+              marginBottom: 5,
+              }}
+            />
+            <View style={[{justifyContent: 'center'}, {alignItems: 'center'} ]}>
             <CtcBoton
               style={styles.button}
               title="Cargar"
               btnColor="#FF0000"
               customPress={() => CargoTratamientos()}
             />
-            <Text style={styles.texto}>Tratamientos Terminados</Text>
-            <FlatList
-              contentContainerStyle={{ paddingHorizontal: 20 }}
-              data={tratamientos}
-              renderItem={({ item }) => listarTratamiento(item)}
+            </View>
+            <View
+              style={{
+              borderBottomColor: 'gray',
+              borderBottomWidth: 3,
+              marginTop: 5,
+              marginBottom: 5,
+              }}
             />
+            <View style={[{justifyContent: 'center'}, {alignItems: 'center'} ]}>
+              <Text style={styles.texto}>Tratamientos Terminados</Text>
+              <FlatList
+                contentContainerStyle={{ paddingHorizontal: 20 }}
+                data={tratamientos}
+                renderItem={({ item }) => listarTratamiento(item)}
+              />
+            </View>
           </View>
         </View>
       </ImageBackground>
@@ -210,7 +242,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginBottom: 15,
     fontSize: 20,
-    color: 'black',
+    color: 'white',
   },
   input: {
     width: 200, 
@@ -254,5 +286,27 @@ const styles = StyleSheet.create({
   imageBack: {
     flex: 1,
     justifyContent: "center"
+  },
+  selectDropdown: {
+    width: 180,
+    height: 40,
+    borderColor: '#444',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 5,
+    marginRight: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    color: '#444',
+    fontSize: 18,
+    backgroundColor: '#FFF',
+    textAlign: 'center',
+  },
+  etiqueta: {
+    width: 90,
   },
 })

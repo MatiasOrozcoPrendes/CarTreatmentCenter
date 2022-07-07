@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, ImageBackground 
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaRepuesto from '../componentes/CtcCartaRepuesto'
+import CtcEtiqueta from '../componentes/CtcEtiqueta';
 import { AñadirRepuesto, ModificarRepuesto, EliminarRepuesto } from '../database/FuncionesABM'
 import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
@@ -19,7 +20,6 @@ const Repuestos = () => {
         <CtcCartaRepuesto 
             style={styles.carta}
             texto={item.repuestoNombre}
-            btnColor="#A9BCF5"
             customPress={() => cargoRepuesto(item)}
           />
       </View>
@@ -91,7 +91,7 @@ return (
       <View style={styles.viewContainer}>
         <View style={styles.generalView}>
           <View style={styles.unaLinea}>
-            <Text style={styles.texto}>Nombre</Text>
+            <CtcEtiqueta texto="Nombre" style={styles.etiqueta}/>
             <CtcInputText 
               style={styles.input}
               placeholder="Nombre"
@@ -100,7 +100,7 @@ return (
             />
           </View>
           <View style={styles.unaLinea}>
-            <Text style={styles.texto}>Precio</Text>
+          <CtcEtiqueta texto="Precio" style={styles.etiqueta}/>
             <CtcInputText 
               style={styles.input}
               placeholder="Precio"
@@ -109,6 +109,14 @@ return (
               onChangeText={(text) => setPrecio(text)}    
             />
           </View>
+          <View
+            style={{
+            borderBottomColor: 'gray',
+            borderBottomWidth: 3,
+            marginTop: 20,
+            marginBottom: 30,
+            }}
+          />
           <View style={styles.unaLinea}>
           <CtcBoton 
               style={styles.button}
@@ -129,11 +137,21 @@ return (
               customPress={() => BajaRepuesto()}
             />
           </View>
-          <FlatList
-            contentContainerStyle={{ paddingHorizontal: 20 }}
-            data={repuestos}
-            renderItem={({ item }) => listarRepuestos(item)}
+          <View
+            style={{
+            borderBottomColor: 'gray',
+            borderBottomWidth: 3,
+            marginTop: 20,
+            marginBottom: 30,
+            }}
           />
+          <View style={[{justifyContent: 'center'}, {alignItems: 'center'} ]}>
+            <FlatList
+              contentContainerStyle={{ paddingHorizontal: 20 }}
+              data={repuestos}
+              renderItem={({ item }) => listarRepuestos(item)}
+            />
+          </View>
         </View>
       </View>
     </ImageBackground>
@@ -207,5 +225,8 @@ const styles = StyleSheet.create({
   imageBack: {
     flex: 1,
     justifyContent: "center"
+  },
+  etiqueta: {
+    width: 80,
   },
 })

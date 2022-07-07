@@ -20,27 +20,27 @@ const Principal = ({ navigation }) => {
   }, []);
   function borrarBaseDatos() {
     console.log('Borro la base de datos');
-    db.transaction( (txn) => {
-      txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
-    });
-    db.transaction( (txn) => {
-      txn.executeSql('DROP TABLE IF EXISTS vehiculos', []);
-    });
-    db.transaction( (txn) => {
-      txn.executeSql('DROP TABLE IF EXISTS tratamientos', []);
-    });
-    db.transaction( (txn) => {
-      txn.executeSql('DROP TABLE IF EXISTS insumos', []);
-    });
-    db.transaction( (txn) => {
-      txn.executeSql('DROP TABLE IF EXISTS tratamientoInsumos', []);
-    });
-    db.transaction( (txn) => {
-      txn.executeSql('DROP TABLE IF EXISTS repuestos', []);
-    });
-    db.transaction( (txn) => {
-      txn.executeSql('DROP TABLE IF EXISTS tratamientoRepuestos', []);
-    });
+    // db.transaction( (txn) => {
+    //   txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
+    // });
+    // db.transaction( (txn) => {
+    //   txn.executeSql('DROP TABLE IF EXISTS vehiculos', []);
+    // });
+    // db.transaction( (txn) => {
+    //   txn.executeSql('DROP TABLE IF EXISTS tratamientos', []);
+    // });
+    // db.transaction( (txn) => {
+    //   txn.executeSql('DROP TABLE IF EXISTS insumos', []);
+    // });
+    // db.transaction( (txn) => {
+    //   txn.executeSql('DROP TABLE IF EXISTS tratamientoInsumos', []);
+    // });
+    // db.transaction( (txn) => {
+    //   txn.executeSql('DROP TABLE IF EXISTS repuestos', []);
+    // });
+    // db.transaction( (txn) => {
+    //   txn.executeSql('DROP TABLE IF EXISTS tratamientoRepuestos', []);
+    // });
 
   }
 

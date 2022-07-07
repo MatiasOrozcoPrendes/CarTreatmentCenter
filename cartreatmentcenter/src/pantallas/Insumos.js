@@ -1,9 +1,10 @@
 import React from 'react'
 import { useState, useEffect} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, ImageBackground  } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, FlatList, ImageBackground} from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaInsumo from '../componentes/CtcCartaInsumo'
+import CtcEtiqueta from '../componentes/CtcEtiqueta';
 import { AñadirInsumo, ModificarInsumo, EliminarInsumo } from '../database/FuncionesABM'
 import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
@@ -19,7 +20,6 @@ const Insumos = () => {
         <CtcCartaInsumo 
             style={styles.carta}
             texto={item.insumoNombre}
-            btnColor="#A9BCF5"
             customPress={() => cargoInsumo(item)}
           />
       </View>
@@ -93,7 +93,7 @@ return (
       <View style={styles.viewContainer}>
         <View style={styles.generalView}>
           <View style={styles.unaLinea}>
-            <Text style={styles.texto}>Nombre</Text>
+            <CtcEtiqueta texto="Nombre" style={styles.etiqueta}/>
             <CtcInputText 
               style={styles.input}
               placeholder="Nombre"
@@ -102,7 +102,7 @@ return (
             />
           </View>
           <View style={styles.unaLinea}>
-            <Text style={styles.texto}>Precio</Text>
+          <CtcEtiqueta texto="Precio" style={styles.etiqueta}/>
             <CtcInputText 
               style={styles.input}
               placeholder="Precio"
@@ -111,6 +111,14 @@ return (
               onChangeText={(text) => setPrecio(text)}    
             />
           </View>
+          <View
+            style={{
+            borderBottomColor: 'gray',
+            borderBottomWidth: 3,
+            marginTop: 20,
+            marginBottom: 30,
+            }}
+          />
           <View style={styles.unaLinea}>
           <CtcBoton 
               style={styles.button}
@@ -131,11 +139,21 @@ return (
               customPress={() => BajaInsumo()}
             />
           </View>
-          <FlatList
-            contentContainerStyle={{ paddingHorizontal: 20 }}
-            data={insumos}
-            renderItem={({ item }) => listarInsumos(item)}
+          <View
+            style={{
+            borderBottomColor: 'gray',
+            borderBottomWidth: 3,
+            marginTop: 20,
+            marginBottom: 30,
+            }}
           />
+          <View style={[{justifyContent: 'center'}, {alignItems: 'center'} ]}>
+            <FlatList
+              contentContainerStyle={{ paddingHorizontal: 20 }}
+              data={insumos}
+              renderItem={({ item }) => listarInsumos(item)}
+            />
+          </View>
         </View>
       </View>
     </ImageBackground>
@@ -177,7 +195,7 @@ const styles = StyleSheet.create({
     height: 80,
   },
   carta:{
-    width: 250, 
+    width: 200, 
     height: 50,
   },
   listItemView: {
@@ -210,5 +228,8 @@ const styles = StyleSheet.create({
   imageBack: {
     flex: 1,
     justifyContent: "center"
+  },
+  etiqueta: {
+    width: 80,
   },
 })

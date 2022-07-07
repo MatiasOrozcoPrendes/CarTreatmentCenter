@@ -6,15 +6,16 @@ import CtcBoton from '../componentes/CtcBoton'
 import CtcCartaRepuesto from '../componentes/CtcCartaRepuesto'
 import CtcCartaInsumo from '../componentes/CtcCartaInsumo'
 import CtcCartaTratamiento from '../componentes/CtcCartaTratamiento';
+import CtcEtiqueta from '../componentes/CtcEtiqueta'
 import SelectDropdown from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
 import { ModTratamiento, EliminarTratamiento, AñadirTratamientoInsumo, EliminarTratamientoInsumo, AñadirTratamientoRepuesto, EliminarTratamientoRepuesto } from '../database/FuncionesABM'
 import DatabaseConnection from '../database/database-connection';
 const db = DatabaseConnection.getConnection();
 
 const ModificarTratamiento = ({ navigation }) => {
   const [tratamientos, setTratamientos] = useState([]);
+  const [auxTratamientos, setAuxTratamientos] = useState(false);
   const [unTratamiento, setUnTratamiento] = useState();
   const [vehiculo, setVehiculo] = useState('');
   const [tratamiento, setTratamiento] = useState('');
@@ -39,7 +40,6 @@ const ModificarTratamiento = ({ navigation }) => {
         <CtcCartaInsumo 
             style={styles.carta}
             texto={DoyNombreInsumo(item.insumoId)}
-            btnColor="#A9BCF5"
             customPress={() => BajaInsumo(item)}
           />
       </View>
@@ -51,7 +51,6 @@ const ModificarTratamiento = ({ navigation }) => {
         <CtcCartaRepuesto 
             style={styles.carta}
             texto={DoyNombreRepuesto(item.repuestoId)}
-            btnColor="#A9BCF5"
             customPress={() => BajaRepuesto(item)}
           />
       </View>
@@ -133,6 +132,8 @@ const ModificarTratamiento = ({ navigation }) => {
                       setTratamientos(auxTratamientos); 
                     }
                 })
+              } else {
+                SinTratamientos();
               }
             });
         });
@@ -313,14 +314,22 @@ const ModificarTratamiento = ({ navigation }) => {
     })
     return auxCosto;
   }
+  function SinTratamientos(){
+      Alert.alert("Atención", "No hay tratamientos activos",
+      [{text: "Ok",},],
+      {cancelable: false},navigation.navigate("Inicio"));
+  }
 
  useEffect(() => {
     TraigoTratamientos();
-    TraigoInsumo();
-    TraigoRepuesto();
   }, []);
 
-
+ useEffect(() => {
+    TraigoInsumo();
+  }, [modal2Visible]);
+  useEffect(() => {
+    TraigoRepuesto();
+  }, [modal3Visible]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -343,6 +352,14 @@ const ModificarTratamiento = ({ navigation }) => {
                   data={tratamientos}
                   renderItem={({ item }) => listarTratamiento(item)}
                 />
+              <View
+                style={{
+                borderBottomColor: 'gray',
+                borderBottomWidth: 3,
+                marginTop: 20,
+                marginBottom: 30,
+                }}
+              />
                 </View>
               </View>
             </Modal>
@@ -403,15 +420,18 @@ const ModificarTratamiento = ({ navigation }) => {
               <View style={styles.unaLinea}>
                 <CtcBoton 
                   style={styles.button}
+                  title="Atras"
+                  customPress={() => setModal2Visible(!modal2Visible)}
+                />
+                <CtcBoton 
+                  style={styles.button}
                   title="Cargar"
-                  btnColor="#FF0000"
                   customPress={() => AltaInsumo()}
                 />
                 <CtcBoton 
                   style={styles.button}
                   title="Agregar Insumo"
-                  btnColor="#FF0000"
-                  customPress={() => navigation.navigate("Insumos")}
+                  customPress={() => [navigation.navigate("Insumos"), setModal2Visible(!modal2Visible)]}
                 />
               </View>
           </View>
@@ -474,22 +494,25 @@ const ModificarTratamiento = ({ navigation }) => {
               <View style={styles.unaLinea}>
                 <CtcBoton 
                   style={styles.button}
+                  title="Atras"
+                  customPress={() => setModal3Visible(!modal3Visible)}
+                />
+                <CtcBoton 
+                  style={styles.button}
                   title="Cargar"
-                  btnColor="#FF0000"
                   customPress={() => AltaRepuesto()}
                 />
                 <CtcBoton 
                   style={styles.button}
                   title="Agregar Repuesto"
-                  btnColor="#FF0000"
-                  customPress={() => navigation.navigate("Repuestos")}
+                  customPress={() => [navigation.navigate("Repuestos"), setModal3Visible(!modal3Visible)]}
                 />
               </View>
               </View>
               </View>
             </Modal>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Vehículo</Text>
+              <CtcEtiqueta texto="Vehículo" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Vehiculo"
@@ -499,7 +522,7 @@ const ModificarTratamiento = ({ navigation }) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Tratamiento</Text>
+              <CtcEtiqueta texto="Tratamiento" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Tratamiento"
@@ -508,7 +531,7 @@ const ModificarTratamiento = ({ navigation }) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Fecha Inicio</Text>
+              <CtcEtiqueta texto="Fecha Inicio" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Fecha Inicio"
@@ -518,7 +541,7 @@ const ModificarTratamiento = ({ navigation }) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Fecha Fin</Text>
+              <CtcEtiqueta texto="Fecha Fin" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Fecha Fin"
@@ -528,7 +551,7 @@ const ModificarTratamiento = ({ navigation }) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <Text style={styles.texto}>Mano De Obra</Text>
+              <CtcEtiqueta texto="Mano De Obra" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Mano De Obra"
@@ -655,5 +678,8 @@ const styles = StyleSheet.create({
   imageBack: {
     flex: 1,
     justifyContent: "center"
+  },
+  etiqueta: {
+    width: 110,
   },
 })

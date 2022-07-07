@@ -8,7 +8,6 @@ import Usuarios from "../pantallas/Usuarios";
 import CrearUsuarios from "../pantallas/CrearUsuarios";
 import GestionarUsuarios from "../pantallas/GestionarUsuarios";
 import AgregarVehiculo from "../pantallas/AgregarVehiculo";
-import ModificarVehiculo from "../pantallas/ModificarVehiculo";
 import CrearTratamiento from "../pantallas/CrearTratamiento";
 import ModificarTratamiento from "../pantallas/ModificarTratamiento";
 import BuscarTratamiento from "../pantallas/BuscarTratamiento";
@@ -83,20 +82,6 @@ const RootStack = () => {
                 component={AgregarVehiculo}
                 options={{
                 title: "Vehículos",
-                headerStyle: {
-                    backgroundColor: "#F2F2F2"
-                },
-                headerTintColor: "#000000",
-                headerTitleStyle: {
-                    color: 'black',
-                    fontSize: 15,
-                }
-            }}/>
-            <Stack.Screen
-                name="ModificarVehiculo"
-                component={ModificarVehiculo}
-                options={{
-                title: "Modificar Vehiculo",
                 headerStyle: {
                     backgroundColor: "#F2F2F2"
                 },
