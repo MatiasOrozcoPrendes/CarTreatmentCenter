@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect} from "react";
-import { StyleSheet, Text, View, SafeAreaView, Alert, KeyboardAvoidingView, ImageBackground  } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Alert, KeyboardAvoidingView, ImageBackground, SectionList  } from 'react-native'
 import CtcInputText from '../componentes/CtcInputText'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcEtiqueta from '../componentes/CtcEtiqueta';
@@ -45,8 +45,18 @@ const AgregarVehiculo = ( {navigation, route} ) => {
       Alert.alert('Error', 'Todos los campos son obligatorios');
     }
     else{
-      AñadirVehiculo(matricula, usuario.substring(0,8),  marca, color, serial);
-      navigation.navigate('GestionarUsuarios', Math.random());
+      Alert.alert("Agregar Vehículo", `Matricula: ${matricula} Marca: ${marca} Color: ${color} Serial: ${serial}`, [
+        {
+          text: "SI",
+          onPress() {
+            AñadirVehiculo(matricula, usuario.substring(0,8),  marca, color, serial);
+            navigation.navigate('GestionarUsuarios', Math.random());
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     }
   }
   function ModVehiculo(){
@@ -54,8 +64,18 @@ const AgregarVehiculo = ( {navigation, route} ) => {
       Alert.alert('Error', 'Todos los campos son obligatorios');
     }
     else{
-      ModificarVehiculo(matricula, Number(usuario.substring(0,8)),  marca, color, serial);
-      navigation.navigate('GestionarUsuarios', Math.random());
+      Alert.alert("Modificar Vehículo", `Matricula: ${matricula} Marca: ${marca} Color: ${color} Serial: ${serial}`, [
+        {
+          text: "SI",
+          onPress() {
+            ModificarVehiculo(matricula, Number(usuario.substring(0,8)),  marca, color, serial);
+            navigation.navigate('GestionarUsuarios', Math.random());
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     }
   }
   function ElimVehiculo(){
@@ -63,8 +83,18 @@ const AgregarVehiculo = ( {navigation, route} ) => {
       Alert.alert('Error', 'No hay vehiculo seleccionado');
     }
     else{
-      EliminarVehiculo(matricula);
-      navigation.navigate('GestionarUsuarios', Math.random());
+      Alert.alert("Eliminar Vehículo", `Matricula: ${matricula} Marca: ${marca} Color: ${color} Serial: ${serial}`, [
+        {
+          text: "SI",
+          onPress() {
+            EliminarVehiculo(matricula);
+            navigation.navigate('GestionarUsuarios', Math.random());
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     }
  }
   return (
@@ -82,7 +112,7 @@ const AgregarVehiculo = ( {navigation, route} ) => {
                   value={matricula}
                   autoCapitalize="characters"
                   placeholder="Matricula"
-                  onChangeText={(text) => setMatricula(text)}    
+                  onChangeText={(text) => setMatricula(text.trim())}    
                 />
               </View>
               <View style={styles.unaLinea}>

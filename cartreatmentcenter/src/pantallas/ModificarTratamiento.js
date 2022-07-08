@@ -83,17 +83,38 @@ const ModificarTratamiento = ({ navigation }) => {
   function EliminoTratamiento(){
     if (tratamientoID === ''){
       Alert.alert("Error", "No se ha seleccionado ningun tratamiento");
+    } else {
+      Alert.alert("Eliminar Tratamiento", `Desea eliminar el tratamiento, Vehículo: ${vehiculo} Tratemiento: ${tratamiento}`, [
+        {
+          text: "SI",
+          onPress() {
+            EliminarTratamiento(tratamientoID);
+            navigation.navigate('Inicio');
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     }
-    EliminarTratamiento(tratamientoID);
-    navigation.navigate('Inicio');
   } 
   function ActualizoTratamiento(){
     if ( tratamiento === '' || fechaInicioTratamiento === '' || fechaFinalTratamiento === '' || manoDeObra === '' || vehiculo === ''){
       Alert.alert('Error', 'Debe completar todos los campos');
     }
     else{
-      ModTratamiento(tratamientoID, vehiculo, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, 0);
-      navigation.navigate('Inicio');
+      Alert.alert("Modificar Tratamiento", `Vehículo: ${vehiculo} Tratemiento: ${tratamiento} Mano de Obra: ${manoDeObra}`, [
+        {
+          text: "SI",
+          onPress() {
+            ModTratamiento(tratamientoID, vehiculo, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, 0);
+            navigation.navigate('Inicio');
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     }
   }
   function TerminoTratamiento(){
@@ -101,12 +122,22 @@ const ModificarTratamiento = ({ navigation }) => {
       Alert.alert('Error', 'Debe completar todos los campos');
     }
     else{
-      let fecha = new Date();
-      let fechaString = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
-      let costo = CalculoCosto();
-      let costoTotal = parseInt(costo)+parseInt(manoDeObra);
-      ModTratamiento(tratamientoID, vehiculo, tratamiento, fechaInicioTratamiento, fechaString, manoDeObra, costoTotal);
-      navigation.navigate('Inicio');
+      Alert.alert("Terminar Tratamiento", `Desea terminar el tratamiento Vehículo: ${vehiculo} Tratemiento: ${tratamiento}?`, [
+        {
+          text: "SI",
+          onPress() {
+            let fecha = new Date();
+            let fechaString = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
+            let costo = CalculoCosto();
+            let costoTotal = parseInt(costo)+parseInt(manoDeObra);
+            ModTratamiento(tratamientoID, vehiculo, tratamiento, fechaInicioTratamiento, fechaString, manoDeObra, costoTotal);
+            navigation.navigate('Inicio');
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     }   
   }
   function TraigoTratamientos(){
@@ -133,7 +164,9 @@ const ModificarTratamiento = ({ navigation }) => {
                     }
                 })
               } else {
-                SinTratamientos();
+                Alert.alert("Atención", "No hay tratamientos activos",
+                [{text: "Ok",},],
+                {cancelable: false},navigation.navigate("Inicio"));
               }
             });
         });
@@ -143,12 +176,22 @@ const ModificarTratamiento = ({ navigation }) => {
       Alert.alert('Error', 'Debe seleccionar un insumo');
     }
     else{
-      let arrayDeCadenas = insumoSeleccionado.split("-");
-      let insumoID = arrayDeCadenas[0];
-      AñadirTratamientoInsumo(tratamientoID, parseInt(insumoID), cantidadInsumo);
-      setModal2Visible(!modal2Visible);
-      setCantidadInsumo('');
-      CargoTratamiento(unTratamiento);
+      Alert.alert("Alta Insumo", `Desea agregar ${cantidadInsumo} articulos?`, [
+        {
+          text: "SI",
+          onPress() {
+            let arrayDeCadenas = insumoSeleccionado.split("-");
+            let insumoID = arrayDeCadenas[0];
+            AñadirTratamientoInsumo(tratamientoID, parseInt(insumoID), cantidadInsumo);
+            setModal2Visible(!modal2Visible);
+            setCantidadInsumo('');
+            CargoTratamiento(unTratamiento);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     }
   }
   function AltaRepuesto(){
@@ -156,12 +199,23 @@ const ModificarTratamiento = ({ navigation }) => {
       Alert.alert('Error', 'Debe seleccionar un repuesto');
     }
     else{
-      let arrayDeCadenas = repuestoSeleccionado.split("-");
-      let repuestoID = arrayDeCadenas[0];
-      AñadirTratamientoRepuesto (tratamientoID, parseInt(repuestoID), cantidadRepuesto);
-      setModal3Visible(!modal3Visible);
-      setCantidadRepuesto('');
-      CargoTratamiento(unTratamiento);
+      Alert.alert("Alta Repuesto", `Desea agregar ${cantidadInsumo} articulos?`, [
+        {
+          text: "SI",
+          onPress() {
+            let arrayDeCadenas = repuestoSeleccionado.split("-");
+            let repuestoID = arrayDeCadenas[0];
+            AñadirTratamientoRepuesto (tratamientoID, parseInt(repuestoID), cantidadRepuesto);
+            setModal3Visible(!modal3Visible);
+            setCantidadRepuesto('');
+            CargoTratamiento(unTratamiento);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
+
     }
   }
   function BajaInsumo(pInsumo){
@@ -314,11 +368,6 @@ const ModificarTratamiento = ({ navigation }) => {
     })
     return auxCosto;
   }
-  function SinTratamientos(){
-      Alert.alert("Atención", "No hay tratamientos activos",
-      [{text: "Ok",},],
-      {cancelable: false},navigation.navigate("Inicio"));
-  }
 
  useEffect(() => {
     TraigoTratamientos();
@@ -414,6 +463,7 @@ const ModificarTratamiento = ({ navigation }) => {
                 <CtcInputText 
                   style={styles.input}
                   placeholder="Cantidad"
+                  keyboardType="numeric"
                   onChangeText={(text) => setCantidadInsumo(text)}    
                 />
               </View>
@@ -488,6 +538,7 @@ const ModificarTratamiento = ({ navigation }) => {
                 <CtcInputText 
                   style={styles.input}
                   placeholder="Cantidad"
+                  keyboardType="numeric"
                   onChangeText={(text) => setCantidadRepuesto(text)}    
                 />
               </View>
@@ -555,6 +606,7 @@ const ModificarTratamiento = ({ navigation }) => {
               <CtcInputText 
                 style={styles.input}
                 placeholder="Mano De Obra"
+                keyboardType="numeric"
                 value={manoDeObra.toString()}
                 onChangeText={(text) => setManoDeObra(text)}    
               />

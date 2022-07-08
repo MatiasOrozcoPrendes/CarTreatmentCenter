@@ -54,33 +54,71 @@ const Insumos = () => {
   }
   function AltaInsumo() {
     if (nombre.length > 0 && precio.length > 0) {
-      AñadirInsumo(nombre, precio);
-      setNombre('');
-      setPrecio('');
+      Alert.alert("Alta Insumo", `Desea agregar ${nombre} Precio: ${precio}?`, [
+        {
+          text: "SI",
+          onPress() {
+            AñadirInsumo(nombre, precio);
+            setNombre('');
+            setPrecio('');
+            let identificadorTiempoDeEspera;
+            identificadorTiempoDeEspera = setTimeout(TraigoInsumo, 1000);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     } else {
       Alert.alert('Error', 'Debe completar todos los campos');
     }
-    TraigoInsumo();
+
   }
   function ModInsumo() {
     if (nombre.length > 0 && precio.length > 0) {
-      ModificarInsumo(insumoId, nombre, parseInt(precio));
-      setNombre('');
-      setPrecio('');
-      setInsumoId('');
+      Alert.alert("Modificar Insumo", `Insumo ${nombre} Precio: ${precio}?`, [
+        {
+          text: "SI",
+          onPress() {
+            ModificarInsumo(insumoId, nombre, parseInt(precio));
+            setNombre('');
+            setPrecio('');
+            setInsumoId('');
+            let identificadorTiempoDeEspera;
+            identificadorTiempoDeEspera = setTimeout(TraigoInsumo, 1000);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     } else {
       Alert.alert('Error', 'Debe completar todos los campos');
     }
-    TraigoInsumo();
+
   }
   function BajaInsumo() {
     if (insumoId != '') {
-      EliminarInsumo(insumoId);
-      setInsumoId('');
+      Alert.alert("Eliminar Insumo", `Insumo ${nombre} Precio: ${precio}?`, [
+        {
+          text: "SI",
+          onPress() {
+            EliminarInsumo(insumoId);
+            setNombre('');
+            setPrecio('');
+            setInsumoId('');
+            let identificadorTiempoDeEspera;
+            identificadorTiempoDeEspera = setTimeout(TraigoInsumo, 1000);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
+
     } else {
       Alert.alert('Error', 'Debe seleccionar un insumo');
     }
-    TraigoInsumo();
   }
 
   useEffect(() => {

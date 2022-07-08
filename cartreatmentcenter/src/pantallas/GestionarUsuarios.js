@@ -37,31 +37,36 @@ const GestionarUsuarios = ({ navigation, route }) => {
     );
   };
   function EliminoUsuario() {
-    EliminarUsuario(ci), 
-    navigation.navigate('Usuarios')   
+    Alert.alert("Eliminar Usuario", `Nombre: ${nombre} Apellido: ${apellido} CI: ${ci}`, [
+      {
+        text: "SI", 
+        onPress() {
+          EliminarUsuario(ci), 
+          navigation.navigate('Usuarios')
+        },
+      },
+      {
+        text: "No",
+      },
+    ]); 
   }
   function CargoUsuario(pUsuario){
-    if(usuarios.length > 0){
-      let auxCi = pUsuario.substring(0,8);
-      usuarios.map(item => {
-        if (item.usuarioCI == auxCi){
-          setNombre(item.usuarioNombre);
-          setApellido(item.usuarioApellido);
-          setCi(item.usuarioCI.toString());
-          setModalVisible(!modalVisible);
-        }
-      });
-      let auxVehiculos = [];
-      vehiculos.map(item => {
-        if (item.usuarioCI == auxCi){
-          auxVehiculos.push(item);
-        }
-      });
-      setListaVehiculos(auxVehiculos);
-     } else {
-       setModalVisible(!modalVisible);
-       navigation.navigate('Usuarios');
-     }
+    let auxCi = pUsuario.substring(0,8);
+    usuarios.map(item => {
+      if (item.usuarioCI == auxCi){
+        setNombre(item.usuarioNombre);
+        setApellido(item.usuarioApellido);
+        setCi(item.usuarioCI.toString());
+        setModalVisible(!modalVisible);
+      }
+    });
+    let auxVehiculos = [];
+    vehiculos.map(item => {
+      if (item.usuarioCI == auxCi){
+        auxVehiculos.push(item);
+      }
+    });
+    setListaVehiculos(auxVehiculos);
   }
   function TraigoUsuariosLista(){
     db.transaction((tx) => {
@@ -71,8 +76,12 @@ const GestionarUsuarios = ({ navigation, route }) => {
           for (let i = 0; i < results.rows.length; ++i)
           temp.push(results.rows.item(i).usuarioCI + " - " + results.rows.item(i).usuarioNombre + " " + results.rows.item(i).usuarioApellido);
           setListaUsuarios(temp);
+        } else {
+          Alert.alert("Atención", "No hay usuarios registrados",
+          [{text: "Ok",},],
+          {cancelable: false},navigation.navigate("Usuarios"));
         }
-      });
+     });
     });
   }
   function TraigoUsuarios(){
@@ -120,6 +129,19 @@ const GestionarUsuarios = ({ navigation, route }) => {
         }
       });
     });
+  }
+  function ModUsuario (ci, nombre, apellido){
+    Alert.alert("Modificar Usuario", `Nombre: ${nombre} Apellido: ${apellido} CI: ${ci}`, [
+      {
+        text: "SI",
+        onPress() {
+          ModificarUsuario(ci, nombre, apellido);
+        },
+      },
+      {
+        text: "No",
+      },
+    ]);
   }
   useEffect(() => {
     TraigoUsuariosLista();
@@ -222,7 +244,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
                 style={styles.button}
                 title="Modificar"
                 btnColor="#FF0000"
-                customPress={() => ModificarUsuario(nombre, apellido, ci)}
+                customPress={() => ModUsuario(nombre, apellido, ci)}
               />
               <CtcBoton 
                 style={styles.button}

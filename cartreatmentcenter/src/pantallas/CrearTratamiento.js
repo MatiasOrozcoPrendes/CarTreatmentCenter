@@ -27,6 +27,10 @@ const CrearTratamiento = ({navigation}) => {
           for (let i = 0; i < results.rows.length; ++i)
           temp.push(results.rows.item(i).usuarioCI + " - " + results.rows.item(i).usuarioNombre + " " + results.rows.item(i).usuarioApellido);
           setListaUsuarios(temp);
+        } else {
+          Alert.alert("Atención", "No hay usuarios registrados",
+          [{text: "Ok",},],
+          {cancelable: false},navigation.navigate("Inicio"));
         }
       });
     });
@@ -54,27 +58,46 @@ const CrearTratamiento = ({navigation}) => {
         });    
   }, [])
   function CargoUsuario(pUsuario){
-    let auxCi = pUsuario.substring(0,8);
-    setUsuario(pUsuario);
-    let auxVehiculos = [];
-    vehiculos.map(item => {
-      if (item.usuarioCI == auxCi){
-        auxVehiculos.push(item.matricula);
-      }
-    });
-    setListaVehiculos(auxVehiculos);
-    setModalVisible(false);
+    if (pUsuario != ''){
+      let auxCi = pUsuario.substring(0,8);
+      setUsuario(pUsuario);
+      let auxVehiculos = [];
+      vehiculos.map(item => {
+        if (item.usuarioCI == auxCi){
+          auxVehiculos.push(item.matricula);
+        }
+      });
+      setListaVehiculos(auxVehiculos);
+      setModalVisible(false);
+    } else {
+      Alert.alert("Atención", "Debe seleccionar un usuario")
+    }
+
   }
   function CargoTratamiento(){
-    if (tratamiento === ''){
-      Alert.alert('Error', 'Debe agregar un tratamiento');
-    }
-    else{
-      let fecha = new Date();
-      let fechaString = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
-      AñadirTratamiento(vehiculo, tratamiento, fechaString, "-", 0, 0);
-      navigation.navigate('Inicio');
-    }
+    if (vehiculo != ''){
+      if (tratamiento === ''){
+        Alert.alert('Error', 'Debe agregar un tratamiento');
+      }
+      else{
+        Alert.alert("Agregar Tratamiento", `Matricula: ${vehiculo} Tratamiento: ${tratamiento}`, [
+          {
+            text: "SI",
+            onPress() {
+              let fecha = new Date();
+              let fechaString = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
+              AñadirTratamiento(vehiculo, tratamiento, fechaString, "-", 0, 0);
+              navigation.navigate('Inicio');
+            },
+          },
+          {
+            text: "No",
+          },
+        ]);
+      }
+    } else {
+      Alert.alert('Error', 'Debe seleccionar un vehiculo');  
+  } 
     
   }
   return (

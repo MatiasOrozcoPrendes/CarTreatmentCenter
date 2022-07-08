@@ -42,63 +42,76 @@ const BuscarTratamiento = ({ navigation }) => {
           for (let i = 0; i < results.rows.length; ++i)
           temp.push(results.rows.item(i).usuarioCI + "- " + results.rows.item(i).usuarioNombre + " " + results.rows.item(i).usuarioApellido);
           setListaUsuarios(temp);
+        } else {
+          Alert.alert("Atención", "No hay usuarios registrados",
+          [{text: "Ok",},],
+          {cancelable: false},navigation.navigate("Inicio"));
         }
       });
     });
   }
   function TraigoVehiculos() {
-    let auxVehiculos = [];
-    let arrayDeCadenas = usuario.split("-");
-    let ci = arrayDeCadenas[0];
-      db.transaction((tx) => {
-        tx.executeSql(`SELECT * FROM vehiculos WHERE usuarioCI =${ci}`, [], (tx, results) => {
-          if (results.rows.length > 0) {
-            let temp = [];
-            let vehiculo
-            for (let i = 0; i < results.rows.length; ++i)
-            temp.push(results.rows.item(i));
-            temp.map((unVehiculo) => {
-              vehiculo = unVehiculo.matricula + "+ " + unVehiculo.marca + " " + unVehiculo.color;
-                auxVehiculos.push(vehiculo);
-                setVehiculos(auxVehiculos);                        
-            })
-          }
-        });
-      });  
-    setModalVisible(!modalVisible)
+    if (usuario != '') {
+      let auxVehiculos = [];
+      let arrayDeCadenas = usuario.split("-");
+      let ci = arrayDeCadenas[0];
+        db.transaction((tx) => {
+          tx.executeSql(`SELECT * FROM vehiculos WHERE usuarioCI =${ci}`, [], (tx, results) => {
+            if (results.rows.length > 0) {
+              let temp = [];
+              let vehiculo
+              for (let i = 0; i < results.rows.length; ++i)
+              temp.push(results.rows.item(i));
+              temp.map((unVehiculo) => {
+                vehiculo = unVehiculo.matricula + " " + unVehiculo.marca + " " + unVehiculo.color;
+                  auxVehiculos.push(vehiculo);
+                  setVehiculos(auxVehiculos);                        
+              })
+            }
+          });
+        });  
+      setModalVisible(!modalVisible)
+    } else {
+      Alert.alert("Atención", "Seleccione un usuario");
+    }
+
   }
   function CargoTratamientos() {
-    let arrayDeCadenas = vehiculo.split("+");
-    let matricula = arrayDeCadenas[0];
-    let auxTratamientos = [];
-    setTratamientos([]);
-    db.transaction((tx) => {
-        tx.executeSql(`SELECT * FROM tratamientos`, [], (tx, results) => {
-          if (results.rows.length > 0) {
-            let temp = [];
-            let auxTratamiento
-            for (let i = 0; i < results.rows.length; ++i)
-            temp.push(results.rows.item(i));
-            temp.map((unTratamiento) => {
-              auxTratamiento = {
-                    matricula: unTratamiento.matricula,
-                    tratamiento: unTratamiento.tratamiento,
-                    fechaFinalTratamiento: unTratamiento.fechaFinalTratamiento,
-                    fechaInicioTratamiento: unTratamiento.fechaInicioTratamiento,
-                    manoDeObra: unTratamiento.manoDeObra,
-                    tratamientoID: unTratamiento.tratamientoId,
-                    costo: unTratamiento.costo
-                }
-                if (auxTratamiento.matricula == matricula) {
-                  if (auxTratamiento.fechaFinalTratamiento !== "-") {
-                    auxTratamientos.push(auxTratamiento);
-                    setTratamientos(auxTratamientos); 
+    if (vehiculo != '') {
+      let arrayDeCadenas = vehiculo.split(" ");
+      let matricula = arrayDeCadenas[0];
+      let auxTratamientos = [];
+      setTratamientos([]);
+      db.transaction((tx) => {
+          tx.executeSql(`SELECT * FROM tratamientos`, [], (tx, results) => {
+            if (results.rows.length > 0) {
+              let temp = [];
+              let auxTratamiento
+              for (let i = 0; i < results.rows.length; ++i)
+              temp.push(results.rows.item(i));
+              temp.map((unTratamiento) => {
+                auxTratamiento = {
+                      matricula: unTratamiento.matricula,
+                      tratamiento: unTratamiento.tratamiento,
+                      fechaFinalTratamiento: unTratamiento.fechaFinalTratamiento,
+                      fechaInicioTratamiento: unTratamiento.fechaInicioTratamiento,
+                      manoDeObra: unTratamiento.manoDeObra,
+                      tratamientoID: unTratamiento.tratamientoId,
+                      costo: unTratamiento.costo
                   }
-                }
-            })
-          }
-        });
-    });
+                  if (auxTratamiento.matricula == matricula) {
+                    if (auxTratamiento.fechaFinalTratamiento !== "-") {
+                      auxTratamientos.push(auxTratamiento);
+                      setTratamientos(auxTratamientos); 
+                    }
+                  }
+              })
+            }
+          });
+      });
+    } else {
+      Alert.alert("Atención", "Seleccione un vehículo");
+    }
   }
   useEffect(() => {
     TraigoListaUsuarios();

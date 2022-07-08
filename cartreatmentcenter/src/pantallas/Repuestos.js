@@ -49,37 +49,73 @@ const Repuestos = () => {
   }
   function cargoRepuesto(item) {
     setNombre(item.repuestoNombre);
-    setPrecio(item.repestoPrecio.toString());
+    setPrecio(item.repuestoPrecio.toString());
     setRepuestoId(item.repuestoId);
   }
   function AltaRepuesto() {
     if (nombre.length > 0 && precio.length > 0) {
-      AñadirRepuesto(nombre, precio);
-      setNombre('');
-      setPrecio('');
+      Alert.alert("Alta Repuesto", `Desea agregar ${nombre} Precio: ${precio}?`, [
+        {
+          text: "SI",
+          onPress() {
+            AñadirRepuesto(nombre, precio);
+            setNombre('');
+            setPrecio('');
+            let identificadorTiempoDeEspera;
+            identificadorTiempoDeEspera = setTimeout(TraigoRepuesto, 1000);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     } else {
       Alert.alert('Error', 'Debe completar todos los campos');
     }
-    TraigoRepuesto();
   }
   function ModRepuesto() {
     if (nombre.length > 0 && precio.length > 0) {
-      ModificarRepuesto(repuestoId, nombre, precio);
-      setNombre('');
-      setPrecio('');
+      Alert.alert("Modificar Repuesto", `Desea modificar ${nombre} Precio: ${precio}?`, [
+        {
+          text: "SI",
+          onPress() {
+            ModificarRepuesto(repuestoId, nombre, precio);
+            setNombre('');
+            setPrecio('');
+            let identificadorTiempoDeEspera;
+            identificadorTiempoDeEspera = setTimeout(TraigoRepuesto, 1000);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
     } else {
       Alert.alert('Error', 'Debe completar todos los campos');
     }
-    TraigoRepuesto();
   }
   function BajaRepuesto() {
     if (repuestoId != '') {
-      EliminarRepuesto(repuestoId);
-      setRepuestoId('');
+      Alert.alert("Eliminar Repuesto", `Desea eliminar ${nombre} Precio: ${precio}?`, [
+        {
+          text: "SI",
+          onPress() {
+            EliminarRepuesto(repuestoId);
+            setNombre('');
+            setPrecio('');
+            setRepuestoId('');
+            let identificadorTiempoDeEspera;
+            identificadorTiempoDeEspera = setTimeout(TraigoRepuesto, 1000);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]);
+
     } else {
       Alert.alert('Error', 'Debe seleccionar un repuesto');
     }
-    TraigoInsumo();
   }
   useEffect(() => {
     TraigoRepuesto();

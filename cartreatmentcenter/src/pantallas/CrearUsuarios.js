@@ -20,12 +20,36 @@ const CrearUsuarios = ({ navigation }) => {
         Alert.alert('Error', 'El CI debe tener 8 dígitos')
       }
       else{
-        AñadirUsuario(ci, nombre, apellido)
-        setNombre('')
-        setApellido('')
-        setCi('')
+        Alert.alert("Crear Usuario", `Nombre: ${nombre} Apellido: ${apellido} CI: ${ci}`, [
+          {
+            text: "SI",
+            onPress() {
+              AñadirUsuario(ci, nombre, apellido)
+              setNombre('')
+              setApellido('')
+              setCi('')
+            },
+          },
+          {
+            text: "No",
+          },
+        ]);
+
       }
     }
+  }
+  function SoloNumeros(pTexto){
+    let newText = '';
+    let numbers = '0123456789';
+    for (var i=0; i < pTexto.length; i++) {
+        if(numbers.indexOf(pTexto[i]) > -1 ) {
+            newText = newText + pTexto[i];
+        }
+        else {
+          Alert.alert('Error', 'El CI debe ser numerico')
+        }
+    }
+    setCi(newText)
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -59,7 +83,7 @@ const CrearUsuarios = ({ navigation }) => {
                   keyboardType="numeric"
                   maxLength={8}
                   value={ci}
-                  onChangeText={(value) => setCi(value)}
+                  onChangeText={(value) => SoloNumeros(value)}
                 />
               </View>
               <View
