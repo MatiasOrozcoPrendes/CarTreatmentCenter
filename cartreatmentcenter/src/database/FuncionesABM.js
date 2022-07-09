@@ -13,8 +13,9 @@ const db = DatabaseConnection.getConnection();
               txn.executeSql(
                 'CREATE TABLE IF NOT EXISTS usuarios(usuarioId INTEGER PRIMARY KEY AUTOINCREMENT, usuarioCI INTEGER UNIQUE, usuarioNombre VARCHAR(20), usuarioApellido VARCHAR(20))',
                 []
-
               );
+              txn.executeSql('INSERT INTO usuarios(usuarioCI, usuarioNombre, usuarioApellido) VALUES(?,?,?)',[43620097, 'Matías', 'Orozco']);
+              txn.executeSql('INSERT INTO usuarios(usuarioCI, usuarioNombre, usuarioApellido) VALUES(?,?,?)',[12345678, 'Juan', 'Pérez']);
             }
           }
         );
@@ -83,6 +84,9 @@ const db = DatabaseConnection.getConnection();
                     'CREATE TABLE IF NOT EXISTS vehiculos(vehiculoId INTEGER PRIMARY KEY AUTOINCREMENT, matricula VARCHAR(20) UNIQUE, usuarioCI INTEGER, marca VARCHAR(20), color VARCHAR(20), serial VARCHAR(50))',
                     []
                   );
+                  txn.executeSql('INSERT INTO vehiculos(matricula, usuarioCI, marca, color, serial) VALUES(?,?,?,?,?)',['LAA-420', 43620097, 'Changan', 'Bordó', 'Cx70-12345678']);
+                  txn.executeSql('INSERT INTO vehiculos(matricula, usuarioCI, marca, color, serial) VALUES(?,?,?,?,?)',['LAA-390', 43620097, 'Honda', 'Roja', 'CRV-12345678']);
+                  txn.executeSql('INSERT INTO vehiculos(matricula, usuarioCI, marca, color, serial) VALUES(?,?,?,?,?)',['LAA-410', 12345678, 'Chevrole', 'Azul', 'S10-12345678']);
                 }
               }
             );
@@ -150,8 +154,13 @@ const db = DatabaseConnection.getConnection();
               txn.executeSql(
                 'CREATE TABLE IF NOT EXISTS tratamientos(tratamientoId INTEGER PRIMARY KEY AUTOINCREMENT, matricula VARCHAR(20), tratamiento VARCHAR(100), fechaInicioTratamiento VARCHAR(20), fechaFinalTratamiento VARCHAR(20), manoDeObra INTEGER, costo INTEGER)',
                 []
-
               );
+              txn.executeSql('INSERT INTO tratamientos(matricula, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, costo) VALUES(?,?,?,?,?,?)',['LAA-420', 'Service Completo', '2021-9-27', '2021-9-29', 2500, 20008]);
+              txn.executeSql('INSERT INTO tratamientos(matricula, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, costo) VALUES(?,?,?,?,?,?)',['LAA-420', 'Service Completo', '2022-3-18', '2022-3-20', 2500, 8461]);
+              txn.executeSql('INSERT INTO tratamientos(matricula, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, costo) VALUES(?,?,?,?,?,?)',['LAA-420', 'Service Completo', '2022-7-8', '-', 0, 0]);
+              txn.executeSql('INSERT INTO tratamientos(matricula, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, costo) VALUES(?,?,?,?,?,?)',['LAA-390', 'Service ', '2022-6-3', '2022-6-3', 1500, 20553]);
+              txn.executeSql('INSERT INTO tratamientos(matricula, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, costo) VALUES(?,?,?,?,?,?)',['LAA-410', 'Service', '2022-2-24', '2022-2-25', 2000, 8224]);
+              txn.executeSql('INSERT INTO tratamientos(matricula, tratamiento, fechaInicioTratamiento, fechaFinalTratamiento, manoDeObra, costo) VALUES(?,?,?,?,?,?)',['LAA-410', 'Service', '2022-7-7', '-', 0, 0]);
             }
           }
         );
@@ -220,8 +229,10 @@ const db = DatabaseConnection.getConnection();
               txn.executeSql(
                 'CREATE TABLE IF NOT EXISTS insumos(insumoId INTEGER PRIMARY KEY AUTOINCREMENT, insumoNombre VARCHAR(20), insumoPrecio INTEGER)',
                 []
-
               );
+              txn.executeSql('INSERT INTO insumos(insumoNombre, insumoPrecio) VALUES(?,?)',['Aceite', 3300]);
+              txn.executeSql('INSERT INTO insumos(insumoNombre, insumoPrecio) VALUES(?,?)',['Liquido de frenos', 263]);
+              txn.executeSql('INSERT INTO insumos(insumoNombre, insumoPrecio) VALUES(?,?)',['Limpia Parabrisas ', 208]);
             }
           }
         );
@@ -290,6 +301,9 @@ const db = DatabaseConnection.getConnection();
                 'CREATE TABLE IF NOT EXISTS repuestos(repuestoId INTEGER PRIMARY KEY AUTOINCREMENT, repuestoNombre VARCHAR(20), repuestoPrecio INTEGER)',
                 []
               );
+              txn.executeSql('INSERT INTO repuestos(repuestoNombre, repuestoPrecio) VALUES(?,?)',['Escobilla Limpia Parabrisa', 350]);
+              txn.executeSql('INSERT INTO repuestos(repuestoNombre, repuestoPrecio) VALUES(?,?)',['Pasitllas Freno', 570]);
+              txn.executeSql('INSERT INTO repuestos(repuestoNombre, repuestoPrecio) VALUES(?,?)',['Neumático', 3500]);
             }
           }
         );
@@ -358,6 +372,19 @@ const db = DatabaseConnection.getConnection();
                 'CREATE TABLE IF NOT EXISTS tratamientoRepuestos(tratamientoRepuestoId INTEGER PRIMARY KEY AUTOINCREMENT, tratamientoId INTEGER, repuestoId INTEGER, cantidad INTEGER)',
                 []
               );
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[1,3,4]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[2,1,3]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[2,2,2]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[3,1,2]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[3,3,2]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[4,1,1]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[4,2,2]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[4,3,4]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[5,1,3]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[5,2,2]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[6,1,3]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[6,2,2]);
+              txn.executeSql('INSERT INTO tratamientoRepuestos(tratamientoId, repuestoId, cantidad) VALUES(?,?,?)',[6,3,2]);
             }
           }
         );
@@ -435,6 +462,20 @@ const db = DatabaseConnection.getConnection();
                 []
 
               );
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[1,1,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[1,3,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[2,1,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[2,2,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[2,3,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[3,2,2]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[3,3,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[4,1,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[4,2,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[5,1,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[5,2,2]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[5,3,1]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[6,1,20]);
+              txn.executeSql('INSERT INTO tratamientoInsumos(tratamientoId, insumoId, cantidad) VALUES(?,?,?)',[6,3,1]);
             }
           }
         );

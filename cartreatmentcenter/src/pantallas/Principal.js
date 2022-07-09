@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, ImageBackground } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ImageBackground, Alert } from 'react-native'
 import CtcBoton from '../componentes/CtcBoton'
 import CtcBotonDerecha from '../componentes/CtcBotonDerecha'
 import CtcBotonIzquierda from '../componentes/CtcBotonIzquierda'
@@ -19,29 +19,38 @@ const Principal = ({ navigation }) => {
     CrearTablaTratamientoRepuesto();
   }, []);
   function borrarBaseDatos() {
-    console.log('Borro la base de datos');
-    // db.transaction( (txn) => {
-    //   txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
-    // });
-    // db.transaction( (txn) => {
-    //   txn.executeSql('DROP TABLE IF EXISTS vehiculos', []);
-    // });
-    // db.transaction( (txn) => {
-    //   txn.executeSql('DROP TABLE IF EXISTS tratamientos', []);
-    // });
-    // db.transaction( (txn) => {
-    //   txn.executeSql('DROP TABLE IF EXISTS insumos', []);
-    // });
-    // db.transaction( (txn) => {
-    //   txn.executeSql('DROP TABLE IF EXISTS tratamientoInsumos', []);
-    // });
-    // db.transaction( (txn) => {
-    //   txn.executeSql('DROP TABLE IF EXISTS repuestos', []);
-    // });
-    // db.transaction( (txn) => {
-    //   txn.executeSql('DROP TABLE IF EXISTS tratamientoRepuestos', []);
-    // });
-
+    Alert.alert("Borrar Base de Datos", `Desea borrar la base de datos?`, [
+      {
+        text: "SI",
+        onPress() {
+          console.log('Borro la base de datos');
+          db.transaction( (txn) => {
+            txn.executeSql('DROP TABLE IF EXISTS usuarios', []);
+          });
+          db.transaction( (txn) => {
+            txn.executeSql('DROP TABLE IF EXISTS vehiculos', []);
+          });
+          db.transaction( (txn) => {
+            txn.executeSql('DROP TABLE IF EXISTS tratamientos', []);
+          });
+          db.transaction( (txn) => {
+            txn.executeSql('DROP TABLE IF EXISTS insumos', []);
+          });
+          db.transaction( (txn) => {
+            txn.executeSql('DROP TABLE IF EXISTS tratamientoInsumos', []);
+          });
+          db.transaction( (txn) => {
+            txn.executeSql('DROP TABLE IF EXISTS repuestos', []);
+          });
+          db.transaction( (txn) => {
+            txn.executeSql('DROP TABLE IF EXISTS tratamientoRepuestos', []);
+          });
+        },
+      },
+      {
+        text: "No",
+      },
+    ]);
   }
 
   return (

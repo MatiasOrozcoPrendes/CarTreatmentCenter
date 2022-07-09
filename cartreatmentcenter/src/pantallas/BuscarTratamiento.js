@@ -17,6 +17,7 @@ const BuscarTratamiento = ({ navigation }) => {
   const [vehiculo, setVehiculo] = useState('');
   const [modalVisible, setModalVisible] = useState(true);
   const [listaUsuarios, setListaUsuarios] = useState([]);
+  //Recorre el array de repuestos y lo muestra en la pantalla
   const listarTratamiento = (item) => {
     return (
       <View >
@@ -28,12 +29,14 @@ const BuscarTratamiento = ({ navigation }) => {
       </View>
     );
   };
+  //Llamo a la pantalla de tratamiento y le paso el tratamiento
   function LlamoTratamiento(item) {
     let Aux = item
     let random = Math.random();
     Aux.aux = random;
     navigation.navigate("Tratamiento", item);
   }
+  //Carga un array con los usuarios
   function TraigoListaUsuarios() {
     db.transaction((tx) => {
       tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
@@ -50,6 +53,7 @@ const BuscarTratamiento = ({ navigation }) => {
       });
     });
   }
+  //Carga un array con los vehiculos del usuario
   function TraigoVehiculos() {
     if (usuario != '') {
       let auxVehiculos = [];
@@ -76,6 +80,7 @@ const BuscarTratamiento = ({ navigation }) => {
     }
 
   }
+  //Carga un array con todos los tratamientos terminados
   function CargoTratamientos() {
     if (vehiculo != '') {
       let arrayDeCadenas = vehiculo.split(" ");
@@ -113,6 +118,7 @@ const BuscarTratamiento = ({ navigation }) => {
       Alert.alert("Atención", "Seleccione un vehículo");
     }
   }
+  //Llama a TraigoListaUsuarios cuando carge la pantalla
   useEffect(() => {
     TraigoListaUsuarios();
   }

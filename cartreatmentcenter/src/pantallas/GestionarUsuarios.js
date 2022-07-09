@@ -23,7 +23,8 @@ const GestionarUsuarios = ({ navigation, route }) => {
   const [usuario, setUsuario] = useState('');
   const [listaUsuarios, setListaUsuarios] = useState([]);
   const [listaVehiculos, setListaVehiculos] = useState([]);
-                                             
+     
+  //Rcorre el array de vehiculos y los nuestra en una lista
   const listarVehiculos = (item) => {
     return (
       <View >
@@ -36,6 +37,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
       </View>
     );
   };
+  // Pregunta si se desea eliminar el usuario y llama a la funcion para eliminarlo
   function EliminoUsuario() {
     Alert.alert("Eliminar Usuario", `Nombre: ${nombre} Apellido: ${apellido} CI: ${ci}`, [
       {
@@ -50,6 +52,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
       },
     ]); 
   }
+  // Recorta la cedula a 8 digitos lo utiliza para cargar los input y los vehiculos
   function CargoUsuario(pUsuario){
     let auxCi = pUsuario.substring(0,8);
     usuarios.map(item => {
@@ -68,6 +71,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
     });
     setListaVehiculos(auxVehiculos);
   }
+  // Crea un array de teaxto con los datos de los usuarios
   function TraigoUsuariosLista(){
     db.transaction((tx) => {
       tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
@@ -84,6 +88,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
      });
     });
   }
+  //Crea un array con usuarios
   function TraigoUsuarios(){
     let usuarios = [];
     db.transaction((tx) => {
@@ -106,6 +111,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
       });
     });
   }
+  // Crea un array de vehiculos
   function TraigoVehiculos(){
     let vehiculos = [];
     db.transaction((tx) => {
@@ -130,6 +136,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
       });
     });
   }
+  // Pregunta se decea modificar el usuario y llama a la funcion para modificarlo
   function ModUsuario (ci, nombre, apellido){
     Alert.alert("Modificar Usuario", `Nombre: ${nombre} Apellido: ${apellido} CI: ${ci}`, [
       {
@@ -143,6 +150,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
       },
     ]);
   }
+
   useEffect(() => {
     TraigoUsuariosLista();
     TraigoUsuarios();
@@ -204,7 +212,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
             </View>
             </Modal>
             <View style={styles.unaLinea}>
-              <CtcEtiqueta texto="Nombre" />
+              <CtcEtiqueta texto="Nombre" style={styles.etiqueta} />
               <CtcInputText 
                 style={styles.input}
                 placeholder="Nombre"
@@ -213,7 +221,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <CtcEtiqueta texto="Apellido" />
+              <CtcEtiqueta texto="Apellido" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 placeholder="Apellido"
@@ -222,7 +230,7 @@ const GestionarUsuarios = ({ navigation, route }) => {
               />
             </View>
             <View style={styles.unaLinea}>
-              <CtcEtiqueta texto="     CI     " />
+              <CtcEtiqueta texto="CI" style={styles.etiqueta}/>
               <CtcInputText 
                 style={styles.input}
                 editable={false}
@@ -243,13 +251,11 @@ const GestionarUsuarios = ({ navigation, route }) => {
               <CtcBoton 
                 style={styles.button}
                 title="Modificar"
-                btnColor="#FF0000"
                 customPress={() => ModUsuario(nombre, apellido, ci)}
               />
               <CtcBoton 
                 style={styles.button}
                 title="Eliminar"
-                btnColor="#FF0000"
                 customPress={() => EliminoUsuario()}
               />
             </View>
@@ -353,6 +359,9 @@ const styles = StyleSheet.create({
   imageBack: {
     flex: 1,
     justifyContent: "center"
+  },
+  etiqueta: {
+    width: 100,
   },
 
 })

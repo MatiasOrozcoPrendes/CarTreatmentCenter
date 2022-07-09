@@ -14,6 +14,7 @@ const Repuestos = () => {
   const [precio, setPrecio] = useState('');
   const [repuestoId, setRepuestoId] = useState('');
   const [repuestos, setRepuestos] = useState([]);
+  //Recorre el array de repuestos y lo muestra en la pantalla
   const listarRepuestos = (item) => {
     return (
       <View >
@@ -25,6 +26,7 @@ const Repuestos = () => {
       </View>
     );
   };
+  //Carga un array de repuestos
   function TraigoRepuesto() {
     let auxRepuestos = [];
         db.transaction((tx) => {
@@ -47,11 +49,13 @@ const Repuestos = () => {
             });
         }); 
   }
+  //Carga datos del repuesto seleccionado
   function cargoRepuesto(item) {
     setNombre(item.repuestoNombre);
     setPrecio(item.repuestoPrecio.toString());
     setRepuestoId(item.repuestoId);
   }
+ //Valida que los datos no esten vacios, pregunta si desea agregar el repuesto  
   function AltaRepuesto() {
     if (nombre.length > 0 && precio.length > 0) {
       Alert.alert("Alta Repuesto", `Desea agregar ${nombre} Precio: ${precio}?`, [
@@ -73,6 +77,7 @@ const Repuestos = () => {
       Alert.alert('Error', 'Debe completar todos los campos');
     }
   }
+  //Valida que los datos no esten vacios, pregunta si desea modificar el repuesto
   function ModRepuesto() {
     if (nombre.length > 0 && precio.length > 0) {
       Alert.alert("Modificar Repuesto", `Desea modificar ${nombre} Precio: ${precio}?`, [
@@ -94,6 +99,7 @@ const Repuestos = () => {
       Alert.alert('Error', 'Debe completar todos los campos');
     }
   }
+  //Valida que los datos no esten vacios, pregunta si desea eliminar el repuesto
   function BajaRepuesto() {
     if (repuestoId != '') {
       Alert.alert("Eliminar Repuesto", `Desea eliminar ${nombre} Precio: ${precio}?`, [

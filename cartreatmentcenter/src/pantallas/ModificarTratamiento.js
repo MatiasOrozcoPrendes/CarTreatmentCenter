@@ -34,6 +34,7 @@ const ModificarTratamiento = ({ navigation }) => {
   const [repuestoSeleccionado, setRepuestoSeleccionado] = useState('');
   const [cantidadInsumo, setCantidadInsumo] = useState('');
   const [cantidadRepuesto, setCantidadRepuesto] = useState('');
+  //Cargo el listado de insumos 
   const listarInsumos = (item) => {
     return (
       <View >
@@ -45,6 +46,7 @@ const ModificarTratamiento = ({ navigation }) => {
       </View>
     );
   }
+  //Cargo el listado de repuestos
   const listarRepuestos = (item) => {
     return (
       <View >
@@ -56,6 +58,7 @@ const ModificarTratamiento = ({ navigation }) => {
       </View>
     );
   }
+  //Recorre array de tratamientos y los carga en una lista
   const listarTratamiento = (item) => {
     return (
       <View >
@@ -68,6 +71,7 @@ const ModificarTratamiento = ({ navigation }) => {
       </View>
     );
   }
+  //Cargo el tratamiento seleccionado y llama funciones que listan los insumos y repuestos
   function CargoTratamiento(pTratamiento){
     setTratamiento(pTratamiento.tratamiento);
     setFechaInicioTratamiento(pTratamiento.fechaInicioTratamiento);
@@ -80,6 +84,7 @@ const ModificarTratamiento = ({ navigation }) => {
     traigoRepuestosFiltrados(pTratamiento.tratamientoID);
     setUnTratamiento(pTratamiento);
   }
+  //Valida que el tratamiento no este vacio, pregunta si desea eliminarlo y llama funcion que elimina el tratamiento
   function EliminoTratamiento(){
     if (tratamientoID === ''){
       Alert.alert("Error", "No se ha seleccionado ningun tratamiento");
@@ -98,6 +103,7 @@ const ModificarTratamiento = ({ navigation }) => {
       ]);
     }
   } 
+  //Valida que los datos no esten vacios, pregunta si desea modificarlo y llama funcion que modifica el tratamiento
   function ActualizoTratamiento(){
     if ( tratamiento === '' || fechaInicioTratamiento === '' || fechaFinalTratamiento === '' || manoDeObra === '' || vehiculo === ''){
       Alert.alert('Error', 'Debe completar todos los campos');
@@ -117,6 +123,7 @@ const ModificarTratamiento = ({ navigation }) => {
       ]);
     }
   }
+  //Valida que los datos no esten vacios, pregunta si desea terminar el tratamiento y llama funcion que termina el tratamiento
   function TerminoTratamiento(){
     if ( tratamiento === '' || fechaInicioTratamiento === '' || fechaFinalTratamiento === '' || manoDeObra === '' || vehiculo === ''){
       Alert.alert('Error', 'Debe completar todos los campos');
@@ -140,6 +147,7 @@ const ModificarTratamiento = ({ navigation }) => {
       ]);
     }   
   }
+  //Cargo un array con los tratamientos activos utilizando la fecha de finalizacion para filtrar y vuelve a la pantalla anterior
   function TraigoTratamientos(){
     let auxTratamientos = [];
         db.transaction((tx) => {
@@ -171,6 +179,7 @@ const ModificarTratamiento = ({ navigation }) => {
             });
         });
   }
+  //Verifica que halla seleccionado un insumo y pregunta si desea agregarlo al tratamiento
   function AltaInsumo(){
     if (insumoSeleccionado === ''){
       Alert.alert('Error', 'Debe seleccionar un insumo');
@@ -194,6 +203,7 @@ const ModificarTratamiento = ({ navigation }) => {
       ]);
     }
   }
+  //Verifica que halla seleccionado un tratamiento y pregunta si desea agregarlo al tratamiento
   function AltaRepuesto(){
     if (repuestoSeleccionado === ''){
       Alert.alert('Error', 'Debe seleccionar un repuesto');
@@ -218,16 +228,39 @@ const ModificarTratamiento = ({ navigation }) => {
 
     }
   }
+  //Pregunta si desea eliminar un insumo del tratamiento y lo elimina
   function BajaInsumo(pInsumo){
-    EliminarTratamientoInsumo(pInsumo.tratamientoInsumoId);
-    CargoTratamiento(unTratamiento);
-    traigoInsumosFiltrados();
+    Alert.alert("Baja Insumo", `Desea dar de baja el insumo ${pInsumo}?`, [
+      {
+        text: "SI",
+        onPress() {
+          EliminarTratamientoInsumo(pInsumo.tratamientoInsumoId);
+          CargoTratamiento(unTratamiento);
+          traigoInsumosFiltrados();
+        },
+      },
+      {
+        text: "No",
+      },
+    ]);
   }
+  //Pregunta si desea eliminar un repuesto del tratamiento y lo elimina
   function BajaRepuesto(pRepuesto){
-    EliminarTratamientoRepuesto(pRepuesto.tratamientoRepuestoId);
-    CargoTratamiento(unTratamiento);
-    traigoRepuestosFiltrados();
+    Alert.alert("Baja Repuesto", `Desea dar de baja el repuesto ${pRepuesto}?`, [
+      {
+        text: "SI",
+        onPress() {
+          EliminarTratamientoRepuesto(pRepuesto.tratamientoRepuestoId);
+          CargoTratamiento(unTratamiento);
+          traigoRepuestosFiltrados();
+        },
+      },
+      {
+        text: "No",
+      },
+    ]);
   }
+  //Cargo un array con todos los insumos 
   function TraigoInsumo() {
     let auxInsumos = [];
         db.transaction((tx) => {
@@ -246,6 +279,7 @@ const ModificarTratamiento = ({ navigation }) => {
             });
         }); 
   }
+  //Cargo un array con todos los repuestos
   function TraigoRepuesto() {
     let auxRepuestos = [];
         db.transaction((tx) => {
@@ -264,6 +298,7 @@ const ModificarTratamiento = ({ navigation }) => {
             });
         });
   }
+  //Recibo un id de un insumo y devuelvo el nombre del insumo
   function DoyNombreInsumo(pInsumo){
     let auxInsumo
     insumos.map((unInsumo) => {
@@ -278,6 +313,7 @@ const ModificarTratamiento = ({ navigation }) => {
     })
     return auxInsumo;
   }
+  //Recibo un id de un repuesto y devuelvo el nombre del repuesto
   function DoyNombreRepuesto(pRepuesto){
     let auxRepuesto
     repuestos.map((unRepuesto) => {
@@ -292,6 +328,7 @@ const ModificarTratamiento = ({ navigation }) => {
     })
     return auxRepuesto;
   }
+  //Cargo un array con los insumos pertenecientes a un tratamiento
   function traigoInsumosFiltrados(pTratamientoID){
     let auxTratamientoInsumos = [];
         db.transaction((tx) => {
@@ -315,6 +352,7 @@ const ModificarTratamiento = ({ navigation }) => {
             });
         });
   }
+  //Cargo un array con los repuestos pertenecientes a un tratamiento
   function traigoRepuestosFiltrados(pTratamientoID){
     let auxTratamientoRepuestos = [];
         db.transaction((tx) => {
@@ -338,6 +376,7 @@ const ModificarTratamiento = ({ navigation }) => {
             });
         });
   }
+  //Recorre el array de insumos filtrados y el de repuestos filtrados y suma el precio de cada uno por su cantidad
   function CalculoCosto(){
     let auxCosto = 0;
     insumosFiltrados.map((unInsumoFiltrado) => {
@@ -372,10 +411,11 @@ const ModificarTratamiento = ({ navigation }) => {
  useEffect(() => {
     TraigoTratamientos();
   }, []);
-
+  //Trae la lista de insumos cada ves que el modal de insumos se abre
  useEffect(() => {
     TraigoInsumo();
   }, [modal2Visible]);
+  //Trae la lista de repuestos cada ves que el modal de repuestos se abre
   useEffect(() => {
     TraigoRepuesto();
   }, [modal3Visible]);
@@ -396,19 +436,24 @@ const ModificarTratamiento = ({ navigation }) => {
             >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                <FlatList
-                  contentContainerStyle={{ paddingHorizontal: 20 }}
-                  data={tratamientos}
-                  renderItem={({ item }) => listarTratamiento(item)}
-                />
-              <View
-                style={{
-                borderBottomColor: 'gray',
-                borderBottomWidth: 3,
-                marginTop: 20,
-                marginBottom: 30,
-                }}
-              />
+                  <FlatList
+                    contentContainerStyle={{ paddingHorizontal: 20 }}
+                    data={tratamientos}
+                    renderItem={({ item }) => listarTratamiento(item)}
+                  />
+                  <View
+                    style={{
+                    borderBottomColor: 'gray',
+                    borderBottomWidth: 3,
+                    marginTop: 20,
+                    marginBottom: 30,
+                    }}
+                  />
+                  <CtcBoton 
+                    style={styles.button}
+                    title="Atras"
+                    customPress={() => navigation.navigate("Inicio")}
+                  />
                 </View>
               </View>
             </Modal>

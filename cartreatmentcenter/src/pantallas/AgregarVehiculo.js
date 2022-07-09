@@ -148,21 +148,18 @@ const AgregarVehiculo = ( {navigation, route} ) => {
                   style={styles.button}
                   disabled={agregarDisabled}
                   title="Agregar"
-                  btnColor="#FF0000"
                   customPress={() => AltaVehiculo()}
                 />
                 <CtcBoton 
                   style={styles.button}
                   disabled={modificarDisabled}
                   title="Modificar"
-                  btnColor="#FF0000"
                   customPress={() => ModVehiculo()}
                 />
                 <CtcBoton 
                   style={styles.button}
                   disabled={eliminarDisabled}
                   title="Eliminar"
-                  btnColor="#FF0000"
                   customPress={() => ElimVehiculo()}
                 />
               </View>

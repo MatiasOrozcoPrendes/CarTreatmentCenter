@@ -14,6 +14,7 @@ const Insumos = () => {
   const [precio, setPrecio] = useState('');
   const [insumoId, setInsumoId] = useState('');
   const [insumos, setInsumos] = useState([]);
+  //Recorre el array de insumos y lo muestra en la pantalla
   const listarInsumos = (item) => {
     return (
       <View >
@@ -25,6 +26,7 @@ const Insumos = () => {
       </View>
     );
   };
+  //Carga un array de insumos
   function TraigoInsumo() {
     let auxInsumos = [];
         db.transaction((tx) => {
@@ -47,11 +49,13 @@ const Insumos = () => {
             });
         }); 
   }
+  //Carga datos del insumo seleccionado
   function cargoInsumo(item) {
     setNombre(item.insumoNombre);
     setPrecio(item.insumoPrecio.toString());
     setInsumoId(item.insumoId);
   }
+  //Valida que los datos no esten vacios, pregunta si desea agregar el insumo 
   function AltaInsumo() {
     if (nombre.length > 0 && precio.length > 0) {
       Alert.alert("Alta Insumo", `Desea agregar ${nombre} Precio: ${precio}?`, [
@@ -74,6 +78,7 @@ const Insumos = () => {
     }
 
   }
+  //Valida que los datos no esten vacios, pregunta si desea modificar el insumo
   function ModInsumo() {
     if (nombre.length > 0 && precio.length > 0) {
       Alert.alert("Modificar Insumo", `Insumo ${nombre} Precio: ${precio}?`, [
@@ -97,6 +102,7 @@ const Insumos = () => {
     }
 
   }
+  //Valida que los datos no esten vacios, pregunta si desea eliminar el insumo
   function BajaInsumo() {
     if (insumoId != '') {
       Alert.alert("Eliminar Insumo", `Insumo ${nombre} Precio: ${precio}?`, [
@@ -161,19 +167,16 @@ return (
           <CtcBoton 
               style={styles.button}
               title="Agregar"
-              btnColor="#FF0000"
               customPress={() => AltaInsumo()}
             />
             <CtcBoton 
               style={styles.button}
               title="Modificar"
-              btnColor="#FF0000"
               customPress={() => ModInsumo()}
             />
             <CtcBoton 
               style={styles.button}
               title="Eliminar"
-              btnColor="#FF0000"
               customPress={() => BajaInsumo()}
             />
           </View>

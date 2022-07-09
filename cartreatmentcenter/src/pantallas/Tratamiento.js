@@ -23,6 +23,7 @@ const Tratamiento = ( {navigation, route} ) => {
   const [insumos, setInsumos] = useState([]);
   const [repuestos, setRepuestos] = useState([]);
   const [auxiliar, setAuxiliar] = useState(1);
+  //Recorre el array de insumosfiltrados y los muestra en una lista
   const listarInsumos = (item) => {
     return (
       <View >
@@ -33,6 +34,7 @@ const Tratamiento = ( {navigation, route} ) => {
       </View>
     );
   };
+  //Recorre el array de repuestosfiltrados y los muestra en una lista
   const listarRepuestos = (item) => {
     return (
       <View >
@@ -43,6 +45,7 @@ const Tratamiento = ( {navigation, route} ) => {
       </View>
     );
   };
+  //Trae los insumos de la base de datos
   function traigoInsumos() {
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM insumos', [], (tx, results) => {
@@ -63,6 +66,7 @@ const Tratamiento = ( {navigation, route} ) => {
       });
     });
   }
+  //Trae los repuestos de la base de datos
   function traigoRepuestos() {
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM repuestos', [], (tx, results) => {
@@ -83,6 +87,7 @@ const Tratamiento = ( {navigation, route} ) => {
       });
     });
   }
+  //Trae solo los insumos que se encuentran en el tratamiento
   function traigoInsumosFiltrados(){
     let auxTratamientoInsumos = [];
         db.transaction((tx) => {
@@ -107,6 +112,7 @@ const Tratamiento = ( {navigation, route} ) => {
             });
         });
   }
+  //Trae solo los repuestos que se encuentran en el tratamiento
   function traigoRepuestosFiltrados(){
     let auxTratamientoRepuestos = [];
         db.transaction((tx) => {
@@ -131,6 +137,7 @@ const Tratamiento = ( {navigation, route} ) => {
             });
         });
   }
+  //Recibe el id del insumo y devuelve el nombre
   function DoyNombreInsumo(id){
     let auxInsumo
     todosInsumos.map((unInsumo) => {
@@ -143,6 +150,7 @@ const Tratamiento = ( {navigation, route} ) => {
     })
     return auxInsumo;
   }
+  //Recibe el id del repuesto y devuelve el nombre
   function DoyNombreRepuesto(id){
     let auxRepuesto
     todosRepuestos.map((unRepuesto) => {
@@ -156,14 +164,16 @@ const Tratamiento = ( {navigation, route} ) => {
     )
     return auxRepuesto;
   }
+  //Se utiliza para el correcto funcuonamiento del useEffect
   function CambioAuxiliar(){
     setAuxiliar(Math.random());
   }
+  //Entra cada ves que se abre la pantalla espera un segundo y que se carguen los arrat de insumos y repuestos y llama a la funcion que trae los Insumos Filtrados y Repuestos Filtrados
   useEffect(() => {
     let identificadorTiempoDeEspera;
     identificadorTiempoDeEspera = setTimeout(CambioAuxiliar, 1000);
   }, [entrada])
-  
+  //Llama a la funcion que trae los Insumos Filtrados y Repuestos Filtrados
   useEffect(() => {
     if (auxiliar != 1){
       traigoInsumosFiltrados();

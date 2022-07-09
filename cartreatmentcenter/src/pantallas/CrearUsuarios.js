@@ -11,6 +11,7 @@ const CrearUsuarios = ({ navigation }) => {
   const [apellido, setApellido] = useState('');
   const [ci, setCi] = useState('');
 
+// Valida que el usuario ingrese todos los datos y llama a la funcion para crear el usuario
   function AgregarUsuario () {
     if(nombre === '' || apellido === '' || ci === ''){
       Alert.alert('Error', 'Debe completar todos los campos')
@@ -38,6 +39,7 @@ const CrearUsuarios = ({ navigation }) => {
       }
     }
   }
+  // Valida que la cedula sea solo numeros
   function SoloNumeros(pTexto){
     let newText = '';
     let numbers = '0123456789';

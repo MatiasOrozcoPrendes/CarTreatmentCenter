@@ -19,7 +19,9 @@ const CrearTratamiento = ({navigation}) => {
   const [tratamiento, setTratamiento] = useState('');
   const [modalVisible, setModalVisible] = useState(true);
   
+
   useEffect(() => {
+    //Carga un array con todos los usuarios
     db.transaction((tx) => {
       tx.executeSql(`SELECT * FROM usuarios`, [], (tx, results) => {
         if (results.rows.length > 0) {
@@ -34,6 +36,7 @@ const CrearTratamiento = ({navigation}) => {
         }
       });
     });
+    //Carga un array con todos los vehiculos
     let vehiculos = [];
         db.transaction((tx) => {
             tx.executeSql(`SELECT * FROM vehiculos`, [], (tx, results) => {
@@ -57,6 +60,7 @@ const CrearTratamiento = ({navigation}) => {
             });
         });    
   }, [])
+  //Carga los datos del usuario seleccionado
   function CargoUsuario(pUsuario){
     if (pUsuario != ''){
       let auxCi = pUsuario.substring(0,8);
@@ -74,6 +78,7 @@ const CrearTratamiento = ({navigation}) => {
     }
 
   }
+  //Valida que los campos no esten vacios, pregunta si desea guardar el tratamiento y llama a la funcion para guardarlo
   function CargoTratamiento(){
     if (vehiculo != ''){
       if (tratamiento === ''){
